@@ -43,7 +43,7 @@ $ vim www_bucket_policy.json
 #### 環境依存
 | プレイスホルダー | 意味 | 例 |
 | -------- | -------- | -------- |
-| {USER_ARN}     | バケットへのアクセスを許可するIAMユーザーのARN  | arn:aws:iam::1234567890:user/jhashimoto |
+| {USER_ARN}     | バケットへのアクセスを許可するIAMユーザーのARN  | arn:aws:iam::773217231744:user/jhashimoto |
 | {BUCKET_ARN}     | バケット名 | arn:aws:s3:::www.jhashimoto.soft-think.com  |
 | {USER_NAME}     | バケットへのアクセスを許可するIAMユーザーの名前     | jhashimoto |
 
@@ -56,7 +56,7 @@ $ vim www_bucket_policy.json
         {
             "Effect": "Allow",
             "Principal": {
-                "AWS": "arn:aws:iam::1234567890:user/jhashimoto"
+                "AWS": "arn:aws:iam::773217231744:user/jhashimoto"
             },
             "Action": "s3:*",
             "Resource": [
