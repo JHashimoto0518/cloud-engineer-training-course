@@ -155,7 +155,7 @@ All Usersに対して読み取り権限の付与を実行する。
 $ aws s3api put-object-acl --bucket $S3_BUCKET_NAME --key welcome.html --acl public-read             ```                
 ```
 
-権限の付与で`Access Denied`エラーが発生する場合は、バケットのパブリックアクセスブロックを解除する必要がある(補足資料参照）。
+権限の付与で`Access Denied`エラーが発生する場合は、バケットのパブリックアクセスブロックを解除する必要がある。(`補足資料: バケットのパブリックアクセスブロック解除`を参照のこと）
 
 ```bash=+
 An error occurred (AccessDenied) when calling the PutObjectAcl operation: Access Denied
@@ -316,8 +316,7 @@ $ curl http://www.$ID.soft-think.com.s3-website-ap-northeast-1.amazonaws.com/hel
 - `http://www.[ID].soft-think.com.s3-website-ap-northeast-1.amazonaws.com/welcome.html`
 - `http://www.[ID].soft-think.com.s3-website-ap-northeast-1.amazonaws.com/hello.html`
 
-## 補足資料
-### パブリックアクセスブロックの解除
+## 補足資料: バケットのパブリックアクセスブロック解除
 
 バケットのパブリックアクセスブロックを確認する。
 
@@ -353,4 +352,3 @@ $ aws s3api get-public-access-block --bucket $S3_BUCKET_NAME
 ```bash=+
 $ aws s3api put-object-acl --bucket $S3_BUCKET_NAME --key welcome.html --acl public-read
 ```
-
