@@ -17,8 +17,11 @@
 ## Hosting static web site on Amazon S3
 - [Introduction](https://hackmd.io/@jhashimoto/B1M8OXLMv)
 - [Webサイトを公開する](https://hackmd.io/@jhashimoto/B1GjuXIGw)
-## S3の特徴と機能
-- [オブジェクトストレージとは](https://hackmd.io/@jhashimoto/...)
+## S3の特徴
+- [オブジェクトストレージとは](https://hackmd.io/@jhashimoto/S12fruk4P)
+## S3の機能
 - [S3バージョニング](https://hackmd.io/@jhashimoto/BJcPSE1ED)
-- [ライフサイクルポリシー](https://hackmd.io/@jhashimoto/...)
-- [バケットへの他のユーザーのアクセスを拒否する(wants)](/8s8NMnBAS1qcJn0fwHRPug)
+- [オブジェクトのライフサイクル管理](https://hackmd.io/@jhashimoto/BJdlGwyEw)
+- [バケットへの他ユーザーのアクセスを拒否する](https://hackmd.io/@jhashimoto/By8sGsX7D)
+## Appendix
+- [参考資料](https://hackmd.io/@jhashimoto/S1cm78xNP)
