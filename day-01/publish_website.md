@@ -1,6 +1,15 @@
 # Webサイトを公開する
 ###### tags: `cetc`,`day01`
 
+## ゴール
+バケットに格納したコンテンツをWebサイトとして公開する。
+
+## ステップ
+1. バケットの作成
+2. バケットのWebサイト構成を設定する
+3. コンテンツアップロード
+4. コンテンツを公開する
+
 ## 環境変数を設定する
 
 ```bash+=
@@ -27,7 +36,10 @@ www.jhashimoto.soft-think.com
 
 ## バケットの作成
 ```bash=+
-$ aws s3api create-bucket --bucket $S3_BUCKET_NAME --acl public-read --create-bucket-configuration LocationConstraint=ap-northeast-1
+$ aws s3api create-bucket \
+--bucket $S3_BUCKET_NAME \
+--acl public-read \
+--create-bucket-configuration LocationConstraint=ap-northeast-1
 {
     "Location": "http://www.jhashimoto.soft-think.com.s3.amazonaws.com/"
 }
@@ -48,12 +60,14 @@ $ pwd
 /home/ec2-user/html
 ```
 
-### welcome.html
+htmlファイルを作成する。
+
+**welcome.html**
+
 ```bash=+
 $ vim welcome.html
 ```
-
-```bash=
+```html=
 <html xmlns="http://www.w3.org/1999/xhtml" >
 <head>
     <title>My Website Home Page</title>
@@ -65,12 +79,12 @@ $ vim welcome.html
 </html>
 ```
 
-### hello.html
+**hello.html**
 ```bash=+
 $ vim hello.html
 ```
 
-```bash=
+```html=
 <html xmlns="http://www.w3.org/1999/xhtml" >
 <head>
     <title>Hello my Website Home Page</title>
@@ -82,29 +96,29 @@ $ vim hello.html
 </html>
 ```
 
-## Webサイトの公開
+## バケットのWebサイト構成を設定する
 
 デフォルトコンテンツは、welcome.html。
 
 ```bash=+
-$ aws s3 website s3://$S3_BUCKET_NAME --index-document welcome.html
+$ aws s3 website s3://$S3_BUCKET_NAME \
+--index-document welcome.html
 ```
 
 ## コンテンツアップロード
 ```bash=+
-$ aws s3 cp ~/html s3://$S3_BUCKET_NAME --recursive
+$ aws s3 cp ~/html s3://$S3_BUCKET_NAME \
+--recursive
 upload: ./hello.html to s3://www.jhashimoto.soft-think.com/hello.html
 upload: ./welcome.html to s3://www.jhashimoto.soft-think.com/welcome.html
 ```
 
-## welcome.htmlを公開する
-welcome.htmlをリクエストすると、'AccessDenied'。
+## コンテンツを公開する
+welcome.htmlをリクエストすると、`AccessDenied`。読み取り権限がないため。
 
 ```bash=+
 $ curl http://www.$ID.soft-think.com.s3-website-ap-northeast-1.amazonaws.com/welcome.html
-  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-                                 Dload  Upload   Total   Spent    Left  Speed
-100   303  100   303    0     0    949      0 --:--:-- --:--:-- --:--:--   949<html>
+<html>
 <head><title>403 Forbidden</title></head>
 <body>
 <h1>403 Forbidden</h1>
@@ -119,82 +133,68 @@ $ curl http://www.$ID.soft-think.com.s3-website-ap-northeast-1.amazonaws.com/wel
 </html>
 ```
 
-ACLを確認する。
+### 匿名ユーザーへの読み取り専用アクセスを許可する
+読み取り専用アクセスを許可するために、アクセス権限を記述したバケットポリシーをバケットに適用する。
+
+#### バケットポリシーとは
+IAMポリシーには、S3リソース（バケット、オブジェクト）に対するアクセス許可を付与する機能がある。これをバケットポリシーと呼ぶ。
+
+#### IAMポリシーとは
+IAMユーザー/グループ/ロールやリソースに関連付けて、これらのアクセス許可を定義する。
+
+#### バケットポリシー定義ファイルを作成
 
 ```bash=+
-$ aws s3api get-object-acl --bucket $S3_BUCKET_NAME --key welcome.html
+$ cd ..
+$ pwd
+/home/ec2-user
+$ vim www_bucket_policy.json
+```
+
+**www_bucket_policy.json**
+
+| プレースホルダー | 意味 | 例 |
+| -------- | -------- | -------- |
+| {BUCKET_NAME}     | バケット名 | www.jhashimoto.soft-think.com  |
+
+```json=
 {
-    "Owner": {
-        "DisplayName": "junichi_hashimoto_aws",
-        "ID": "20ff705d5e99c4465b612241c5cb440bcfd650c6297ae85bb834c19548e1f0af"
-    },
-    "Grants": [
+    "Version": "2012-10-17",
+    "Statement": [
         {
-            "Grantee": {
-                "DisplayName": "junichi_hashimoto_aws",
-                "ID": "20ff705d5e99c4465b612241c5cb440bcfd650c6297ae85bb834c19548e1f0af",
-                "Type": "CanonicalUser"
-            },
-            "Permission": "FULL_CONTROL"
+            "Effect": "Allow",
+            "Principal": "*",
+            "Action": "s3:GetObject",
+            "Resource": [
+                "arn:aws:s3:::{BUCKET_NAME}",
+                "arn:aws:s3:::{BUCKET_NAME}/*"
+            ]
         }
     ]
 }
 ```
 
-所有者にフルコントール権限があるが、`All Users グループ`の権限がない。
-
-[アクセスコントロールリスト \(ACL\) の概要 \- Amazon Simple Storage Service](https://docs.aws.amazon.com/ja_jp/AmazonS3/latest/dev/acl-overview.html)
-> All Users グループ – http://acs.amazonaws.com/groups/global/AllUsers で表されます。
-> 
-> このグループへのアクセス許可により、世界中の誰でもリソースにアクセスすることが許可されます。 
-
-
-All Usersに対して読み取り権限の付与を実行する。
+### バケットポリシー適用
+バケットポリシーを適用する。
 
 ```bash=+
-$ aws s3api put-object-acl --bucket $S3_BUCKET_NAME --key welcome.html --acl public-read             ```                
+aws s3api put-bucket-policy \
+--bucket $S3_BUCKET_NAME \
+--policy file://www_bucket_policy.json
 ```
 
-権限の付与で`Access Denied`エラーが発生する場合は、バケットのパブリックアクセスブロックを解除する必要がある。(`補足資料: バケットのパブリックアクセスブロック解除`を参照のこと）
+バケットポリシーの適用で、以下の`Access Denied`エラーが発生する場合は、バケットのパブリックアクセスブロックを解除すること。(補足資料: バケットのパブリックアクセスブロック解除 を参照のこと）
 
-```bash=+
-An error occurred (AccessDenied) when calling the PutObjectAcl operation: Access Denied
+```bash
+An error occurred (AccessDenied) when calling the PutBucketPolicy operation: Access Denied
 ```
 
-権限を確認すると、All Usersへの読み取り権限が付与されている。
-
-```bash=+
-$ aws s3api get-object-acl --bucket $S3_BUCKET_NAME --key welcome.html --query 'Grants[]'
-[
-    {
-        "Grantee": {
-            "DisplayName": "junichi_hashimoto_aws",
-            "ID": "20ff705d5e99c4465b612241c5cb440bcfd650c6297ae85bb834c19548e1f0af",
-            "Type": "CanonicalUser"
-        },
-        "Permission": "FULL_CONTROL"
-    },
-    {
-        "Grantee": {
-            "Type": "Group",
-            "URI": "http://acs.amazonaws.com/groups/global/AllUsers"
-        },
-        "Permission": "READ"
-    }
-]
-```
-
-### Tips
-`--query`で出力する要素を指定できる。AWS CLIの全コマンド共通のパラメータ。
-
-
+### 公開されたことを確認
 再び、welcome.htmlをリクエストすると、レスポンスが返ってきた。
 
 ```bash=+
 $ curl http://www.$ID.soft-think.com.s3-website-ap-northeast-1.amazonaws.com/welcome.html
-  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-                                 Dload  Upload   Total   Spent    Left  Speed
-100   190  100   190    0     0    470      0 --:--:-- --:--:-- --:--:--   471<html xmlns="http://www.w3.org/1999/xhtml" >
+<html xmlns="http://www.w3.org/1999/xhtml" >
 <head>
     <title>My Website Home Page</title>
 </head>
@@ -205,100 +205,11 @@ $ curl http://www.$ID.soft-think.com.s3-website-ap-northeast-1.amazonaws.com/wel
 </html>
 ```
 
-デフォルトコンテンツも確認してみる。
-
-```bash=+
-$ curl http://www.$ID.soft-think.com.s3-website-ap-northeast-1.amazonaws.com/
-  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-                                 Dload  Upload   Total   Spent    Left  Speed
-100   190  100   190    0     0    503      0 --:--:-- --:--:-- --:--:--   503<html xmlns="http://www.w3.org/1999/xhtml" >
-<head>
-    <title>My Website Home Page</title>
-</head>
-<body>
-  <h1>Welcome to my website</h1>
-  <p>Now hosted on Amazon S3!</p>
-</body>
-</html>
-```
-
-## 全てのコンテンツを公開する
-
-残りのコンテンツも公開する。
+hello.htmlも確認する。
 
 ```bash=+
 $ curl http://www.$ID.soft-think.com.s3-website-ap-northeast-1.amazonaws.com/hello.html
-  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-                                 Dload  Upload   Total   Spent    Left  Speed
-100   303  100   303    0     0    986      0 --:--:-- --:--:-- --:--:--   990<html>
-<head><title>403 Forbidden</title></head>
-<body>
-<h1>403 Forbidden</h1>
-<ul>
-<li>Code: AccessDenied</li>
-<li>Message: Access Denied</li>
-<li>RequestId: 8EE139148B98B96C</li>
-<li>HostId: 5gv8TUKnrEYhRN++Dhwm8MwMY/CSpVfhr191hOn6xr9Bj02x7TQRaplsKM3aGZ8I7FRPhuIwqn4=</li>
-</ul>
-<hr/>
-</body>
-</html>
-```
-
-今回はコンテンツファイルが２つしかないので、それぞれのファイルに対してコマンドを実行してもよいが、そのやり方ではスケールしない。
-
-１回のコマンド実行で、コンテンツの全オブジェクトに対して読み取り権限を付与したい。
-
-まず、`s3 ls`でオブジェクト一覧を取得してみる。
-
-```bash=+
-$ aws s3 ls s3://$S3_BUCKET_NAME
-2020-08-16 17:57:50        191 hello.html
-2020-08-16 17:57:50        190 welcome.html
-```
-
-さらに`awk`でオブジェクト名だけを取り出してみる。
-```bash=+
-$ aws s3 ls s3://$S3_BUCKET_NAME | awk '{print $4'}
-hello.html
-welcome.html
-```
-
-`xargs -I`で全オブジェクトをパラメータに指定してコマンドを実行すればよい。
-```bash=+
-[root@server ~]# aws s3 ls s3://$S3_BUCKET_NAME | awk '{print $4'} | xargs -I{} aws s3api put-object-acl --acl public-read --bucket $S3_BUCKET_NAME --key "{}"
-```
-
-hello.htmlの権限を確認してみる。
-
-```bash=+
-$ aws s3api get-object-acl --bucket $S3_BUCKET_NAME --key hello.html --query 'Grants[]'
-[
-    {
-        "Grantee": {
-            "DisplayName": "junichi_hashimoto_aws",
-            "ID": "20ff705d5e99c4465b612241c5cb440bcfd650c6297ae85bb834c19548e1f0af",
-            "Type": "CanonicalUser"
-        },
-        "Permission": "FULL_CONTROL"
-    },
-    {
-        "Grantee": {
-            "Type": "Group",
-            "URI": "http://acs.amazonaws.com/groups/global/AllUsers"
-        },
-        "Permission": "READ"
-    }
-]
-```
-
-hello.htmlも公開できた。
-
-```bash=+
-$ curl http://www.$ID.soft-think.com.s3-website-ap-northeast-1.amazonaws.com/hello.html
-  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-                                 Dload  Upload   Total   Spent    Left  Speed
-100   191  100   191    0     0    555      0 --:--:-- --:--:-- --:--:--   555<html xmlns="http://www.w3.org/1999/xhtml" >
+<html xmlns="http://www.w3.org/1999/xhtml" >
 <head>
     <title>Hello my Website Home Page</title>
 </head>
@@ -307,21 +218,36 @@ $ curl http://www.$ID.soft-think.com.s3-website-ap-northeast-1.amazonaws.com/hel
   <p>Now hosted on Amazon S3!</p>
 </body>
 </html>
+
+```
+
+デフォルトコンテンツは、welcome.htmlになっている。
+
+```bash=+
+$ curl http://www.$ID.soft-think.com.s3-website-ap-northeast-1.amazonaws.com/
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+    <title>My Website Home Page</title>
+</head>
+<body>
+  <h1>Welcome to my website</h1>
+  <p>Now hosted on Amazon S3!</p>
+</body>
+</html>
 ```
 
 ## ブラウザからテスト
-ブラウザからアクセスして、コンテンツが表示されればOK。URLの`ID`は自分のものに置き換えること。
+ブラウザからWebサイトにアクセスして、コンテンツが表示されればOK。
 
-- `http://www.[ID].soft-think.com.s3-website-ap-northeast-1.amazonaws.com/`
-- `http://www.[ID].soft-think.com.s3-website-ap-northeast-1.amazonaws.com/welcome.html`
-- `http://www.[ID].soft-think.com.s3-website-ap-northeast-1.amazonaws.com/hello.html`
+## 補足資料
 
-## 補足資料: バケットのパブリックアクセスブロック解除
+### バケットのパブリックアクセスブロック解除
 
 バケットのパブリックアクセスブロックを確認する。
 
 ```bash=+
-$ aws s3api get-public-access-block --bucket $S3_BUCKET_NAME
+$ aws s3api get-public-access-block \
+--bucket $S3_BUCKET_NAME
 {
     "PublicAccessBlockConfiguration": {
         "BlockPublicAcls": true,
@@ -335,8 +261,11 @@ $ aws s3api get-public-access-block --bucket $S3_BUCKET_NAME
 パブリックアクセスブロックを解除する。
 
 ```bash=+
-$ aws s3api put-public-access-block --bucket $S3_BUCKET_NAME --public-access-block-configuration "BlockPublicAcls = false"
-$ aws s3api get-public-access-block --bucket $S3_BUCKET_NAME
+$ aws s3api put-public-access-block \
+--bucket $S3_BUCKET_NAME \
+--public-access-block-configuration "BlockPublicAcls = false"
+$ aws s3api get-public-access-block \
+--bucket $S3_BUCKET_NAME
 {
     "PublicAccessBlockConfiguration": {
         "BlockPublicAcls": false,
@@ -347,8 +276,5 @@ $ aws s3api get-public-access-block --bucket $S3_BUCKET_NAME
 }
 ```
 
-再度、All Usersに対して読み取り権限の付与を実行する。
-
-```bash=+
-$ aws s3api put-object-acl --bucket $S3_BUCKET_NAME --key welcome.html --acl public-read
-```
+## 参考
+[バケットポリシーの例 \- Amazon Simple Storage Service](https://docs.aws.amazon.com/ja_jp/AmazonS3/latest/dev/example-bucket-policies.html#example-bucket-policies-use-case-2)
