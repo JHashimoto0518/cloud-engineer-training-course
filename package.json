@@ -1,0 +1,24 @@
+{
+  "name": "cloud-engineer-training-course",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JHashimoto0518/cloud-engineer-training-course.git"
+  },
+  "keywords": [],
+  "author": "jhashimoto",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JHashimoto0518/cloud-engineer-training-course/issues"
+  },
+  "homepage": "https://github.com/JHashimoto0518/cloud-engineer-training-course",
+  "devDependencies": {
+    "honkit": "^3.6.6"
+  },
+  "dependencies": {}
+}
