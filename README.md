@@ -1,6 +1,56 @@
-# cloud-engineer-training-course
+# はじめに
 
-- [はじめに](https://hackmd.io/@jhashimoto/SkxVoJCfP)
-- [この手順書について](https://hackmd.io/@jhashimoto/BJUTgeCMP)
-- aa
-- bb
+## このコースの方針
+- AWSには数多くのサービスがあるので、すべてサービスを取り上げることはしません。Webサイトのホスティングにテーマを絞ります。
+- 様々なシステム構成を実習して、それぞれのメリット、デメリットを理解してもらいます。
+- クラウドコンピューティングの考え方を習得し、AWSのサービスを適切に選択できるようになることが目標です。
+
+## 教科書
+こちらをこのコースの教科書とします。
+- Amazon Web Servicesではじめる新米プログラマのためのクラウド超入門
+
+## 費用について
+クラウドサービスは、リソースを使った分だけ支払いが発生します。
+
+スペックの高い（高価な）リソースは使わず、できるだけ無料枠a内に収まるようにしていますが、課金されないことを保証はできませんので、予めご承知おきください。
+
+課金されるケースとしては、以下のような例が挙げられます。
+- 無料利用枠を超えてしまった（EC2インスタンス/ロードバランサーの稼働時間、S3/EBSの使用容量など。特にAWSアカウントがこの勉強会以外と共用の場合）。
+- 無料利用期間（12カ月）を過ぎていた。
+- 誤ってスペックの高い仮想サーバーを作ってしまった。
+- 停止中のEC2インスタンスに固定IPを割り当てたままだった。
+
+# この手順書について
+## 実習環境
+- AWSマネージメントコンソール
+    - FirefoxまたはChromeを推奨。IEは不可。
+- ローカルPC
+    - SSHが実行できればよい。Windows 10であれば、Git BashかTeraTermを推奨。
+
+## コピー＆ペーストについて
+- AWSのコマンドは長いので、手順書からコピー＆ペーストしてもかまいませんが、何をやっているのかを、理解しつつ進めてください。
+
+## 手順の表記について
+### 入力するコマンド
+```bash=
+$ ls -l
+```
+`$`はプロンプトを表します。`$`以降の`ls -l`が入力するコマンドです。
+
+### 省略記号
+`...`は、出力の省略を表します。
+
+```bash=
+$ ls -l aws*
+-rw-r--r--. 1 root root 33105191  6月 20 12:03 awscliv2.zip
+$ unzip awscliv2.zip
+Archive:  awscliv2.zip
+   creating: aws/
+   creating: aws/dist/
+  inflating: aws/README.md
+...
+   creating: aws/dist/lib/python3.7/
+   creating: aws/dist/lib/python3.7/config-3.7m-x86_64-linux-gnu/
+  inflating: aws/dist/lib/python3.7/config-3.7m-x86_64-linux-gnu/Makefile
+```
+
