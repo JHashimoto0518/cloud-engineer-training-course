@@ -1,8 +1,6 @@
 オブジェクトストレージとは
 =
 
-###### tags: `cetc`,`day01`
-
 ## データストアの種類
 [20190220 AWS Black Belt Online Seminar Amazon S3 / Glacier P.11](https://www.slideshare.net/AmazonWebServicesJapan/20190220-aws-black-belt-online-seminar-amazon-s3-glacier)
 ![20190220-aws-black-belt-online-seminar-amazon-s3-glacier-11-638.jpg](https://image.slidesharecdn.com/20190220aws-blackbelts3glacier-190226063716/95/20190220-aws-black-belt-online-seminar-amazon-s3-glacier-11-638.jpg?cb=1551163101)
