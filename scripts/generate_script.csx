@@ -1,5 +1,5 @@
 // read md
-private const string MdPath = @"../contents/day-02/create_vpc.md";
+private const string MdPath = @"c:/rep/github/jhashimoto0518/cloud-engineer-training-course/contents/day-02/create_vpc.md";
 var lines = File.ReadAllLines(MdPath);
 Debug.Assert(lines[0] == "");
 
@@ -9,6 +9,6 @@ Debug.Assert(commandLines.FirstOrDefault() == "");
 
 // to script file
 // TODO:consider newline 
-const string ScriptPath = "./day-02/create_resources.sh";
+const string ScriptPath = @"c:/rep/github/jhashimoto0518/cloud-engineer-training-course/scripts/day-02/create_resources.sh";
 File.Delete(ScriptPath);
 File.AppendAllLines(ScriptPath, commandLines);
