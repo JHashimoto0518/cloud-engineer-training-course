@@ -7,7 +7,6 @@ Debug.Assert(lines[0] == "");
 var commandLines = lines.Where(l => l.StartsWith("$")).Select(l => l.Trim('$').Trim());
 Debug.Assert(commandLines.FirstOrDefault() == "");
 
-
 // to script file
 // TODO:consider newline 
 const string ScriptPath = "./day-02/create_resources.sh";
