@@ -9,76 +9,79 @@
 6. Route TableをSubnetに関連付ける
 
 ## 前提
-.bashrcを編集する。
+環境変数が設定されていること
 
-- 以下の環境変数設定は不要（動的な値なので今後.bashrcには定義しない）なので、削除する
-    - SV_PUB_IP
-    - EC2_PRI_IP
-    - EC2_INS_ID
-    - EC2_SG_GID
-- この手順では、以下の環境変数を使用するので、設定しておくこと
-    - USER_ID
-
-```bash=
-[root@server ~]# source .bashrc
-```
 
 ## VPCの作成
-```bash=
-[root@server ~]# export CIDR_BLOCK="192.168.10.0/24"
-[root@server ~]# aws ec2 create-vpc --cidr-block ${CIDR_BLOCK}
+
+| 属性 | 値 |　
+| -------- | -------- | 
+| リソース名 | vpc for web |
+| CIDR | 192.168.10.0/24 |
+|  |  | 
+
+
+```bash
+$ aws ec2 create-vpc --cidr-block 192.168.10.0/24 --tag-specifications ResourceType=vpc,Tags="[{Key=Name,Value=vpc for web}]"
 {
     "Vpc": {
         "CidrBlock": "192.168.10.0/24",
-        "DhcpOptionsId": "dopt-3a97a55d",
+        "DhcpOptionsId": "dopt-224b1145",
         "State": "pending",
-        "VpcId": "vpc-???",
-        "OwnerId": "773217231744",
+        "VpcId": "vpc-071e097c0376444bb",
+        "OwnerId": "937264738810",
         "InstanceTenancy": "default",
         "Ipv6CidrBlockAssociationSet": [],
         "CidrBlockAssociationSet": [
             {
-                "AssociationId": "vpc-cidr-assoc-0e8b27a388ce7496f",
+                "AssociationId": "vpc-cidr-assoc-0d93f3b5da20a8465",
                 "CidrBlock": "192.168.10.0/24",
                 "CidrBlockState": {
                     "State": "associated"
                 }
             }
         ],
-        "IsDefault": false
+        "IsDefault": false,
+        "Tags": [
+            {
+                "Key": "Name",
+                "Value": "vpc for web"
+            }
+        ]
     }
 }
 ```
 
-作成されたリソースの情報が出力される。Idを手動でコピーして環境変数に設定する。以下この流れは同じ。
+## VPC IDを環境変数に設定
 
-```bash=
-[root@server ~]# export VPC_ID="vpc-???"
-[root@server ~]# echo ${VPC_ID}
-vpc-???
+`.bashrc`に追加する。
+```bash
+$ echo "export WEB_VPC_ID="`aws ec2 describe-vpcs --filters Name=tag:Name,Values="vpc for web" --query 'Vpcs[].VpcId' --output text` >> ~/.bashrc
 ```
 
-## VPCに名前を付ける
-```bash=
-[root@server ~]# export VPC_TAG="${USER_ID} vpc for http ec2"
-[root@server ~]# echo $VPC_TAG
-hashimoto-j vpc for http ec2
-[root@server ~]# aws ec2 create-tags --resources ${VPC_ID} --tags "Key=Name,Value=${VPC_TAG}"
-[root@server ~]# aws ec2 describe-vpcs --vpc-ids "${VPC_ID}" --query 'Vpcs[].Tags[]'
-[
-    {
-        "Key": "Name",
-        "Value": "hashimoto-j vpc for http ec2"
-    }
-]
+末尾に追加されたことを確認。
+```bash
+$ tail -n 3 ~/.bashrc
+export S3_BUCKET_NAME=www.$ID.soft-think.com
+export S3_ETL_BUCKET_NAME=etl.$ID.soft-think.com
+export WEB_VPC_ID=vpc-071e097c0376444bb
 ```
 
-マネジメントコンソールで名前が付いていることを確認する
+環境変数を確認。
+```bash
+$ . ~/.bashrc
+$ echo $WEB_VPC_ID 
+vpc-071e097c0376444bb
+```
 
-## AvailabilityZoneを調べる
+以降リソースをつくるときは、この流れは同じ。
+1. リソース作成
+2. リソースのIDを環境変数に設定
 
-```bash=
-[root@server ~]# aws ec2 describe-availability-zones
+## 東京リージョンのAvailabilityZoneを調べる
+
+```bash
+$ aws ec2 describe-availability-zones
 {
     "AvailabilityZones": [
         {
@@ -115,18 +118,18 @@ hashimoto-j vpc for http ec2
 }
 ```
 
-東京RegionにAZが３つあるのがわかる。どのAZを使っても同じだが、今回はap-northeast-1aを使う。
-
-```bash=+
-[root@server ~]# export AVAILABILITY_ZONE="ap-northeast-1a"
-[root@server ~]# echo $AVAILABILITY_ZONE 
-ap-northeast-1a
-```
+AZが３つあることがわかる。どのAZを使っても同じだが、今回は`ap-northeast-1a`を使う。
 
 ## Subnetの作成
-```bash=
-[root@server ~]# export SUBNET_CIDR_BLOCK="192.168.10.0/25"
-[root@server ~]# aws ec2 create-subnet --vpc-id ${VPC_ID} --cidr-block ${SUBNET_CIDR_BLOCK} --availability-zone ${AVAILABILITY_ZONE}
+
+| 属性 | 値 |　
+| -------- | -------- |
+| リソース名 | vpc-subnet for web |
+| CIDR | 192.168.10.0/25 |
+
+```bash
+$ aws ec2 create-subnet --vpc-id ${WEB_VPC_ID} --cidr-block 192.168.10.0/25 --availability-zone ap-northeast-1a --tag-specifications ResourceType=subnet,Tags="[{Key=Name,Value=vpc-subnet for
+ web}]"
 {
     "Subnet": {
         "AvailabilityZone": "ap-northeast-1a",
@@ -135,121 +138,153 @@ ap-northeast-1a
         "CidrBlock": "192.168.10.0/25",
         "DefaultForAz": false,
         "MapPublicIpOnLaunch": false,
-        "State": "pending",
-        "SubnetId": "subnet-???",
-        "VpcId": "vpc-???",
-        "OwnerId": "773217231744",
+        "State": "available",
+        "SubnetId": "subnet-0afdf5923858ea8f0",
+        "VpcId": "vpc-071e097c0376444bb",
+        "OwnerId": "937264738810",
         "AssignIpv6AddressOnCreation": false,
         "Ipv6CidrBlockAssociationSet": [],
-        "SubnetArn": "arn:aws:ec2:ap-northeast-1:773217231744:subnet/subnet-???"
+        "Tags": [
+            {
+                "Key": "Name",
+                "Value": "vpc-subnet for web"
+            }
+        ],
+        "SubnetArn": "arn:aws:ec2:ap-northeast-1:937264738810:subnet/subnet-0afdf5923858ea8f0"
     }
 }
-[root@server ~]# export SUBNET_ID="subnet-???"
-[root@server ~]# echo ${SUBNET_ID}
-subnet-???
 ```
 
-## Subnetに名前を付ける
-```bash=
-[root@server ~]# export SUBNET_TAG="${USER_ID} public subnet for http ec2"
-[root@server ~]# aws ec2 create-tags --resources ${SUBNET_ID} --tags "Key=Name,Value=${SUBNET_TAG}"
-[root@server ~]# aws ec2 describe-subnets --subnet-id=${SUBNET_ID} --query 'Subnets[].Tags[]'
-[
-    {
-        "Key": "Name",
-        "Value": "hashimoto-j public subnet for http ec2"
-    }
-]
+## Subnet IDを環境変数に設定
+
+`.bashrc`に追加する。
+```bash
+$ echo "export WEB_VPC_SUBNET_ID="`aws ec2 describe-subnets --filters Name=tag:Name,Values="vpc-subnet for web" --query "Subnets[].SubnetId" --output text` >> ~/.bashrc
 ```
 
-マネジメントコンソールで名前が付いていることを確認する
+末尾に追加されたことを確認。
+```bash
+$ tail -n 3 ~/.bashrc
+export S3_ETL_BUCKET_NAME=etl.$ID.soft-think.com
+export WEB_VPC_ID=vpc-071e097c0376444bb
+export WEB_VPC_SUBNET_ID=subnet-0afdf5923858ea8f0
+```
+
+環境変数を確認。
+```bash
+$ . ~/.bashrc
+$ echo $WEB_VPC_SUBNET_ID
+subnet-0afdf5923858ea8f0
+```
 
 ## Internet Gatewayの作成
-```bash=
-[root@server ~]# aws ec2 create-internet-gateway
+リソースを作成する。
+
+```bash
+$ $ aws ec2 create-internet-gateway --tag-specifications ResourceType=internet-gateway,Tags="[{Key=Name,Value=web vpc gateway}]"
 {
     "InternetGateway": {
         "Attachments": [],
-        "InternetGatewayId": "igw-???",
-        "Tags": []
+        "InternetGatewayId": "igw-06566e29cbf0e6ecc",
+        "OwnerId": "937264738810",
+        "Tags": [
+            {
+                "Key": "Name",
+                "Value": "web vpc gateway"
+            }
+        ]
     }
 }
-[root@server ~]# export GATEWAY_ID="igw-???"
-[root@server ~]# echo ${GATEWAY_ID}
-igw-???
 ```
 
-## Internet Gatewayへ名前を追加する
-```bash=
-[root@server ~]# export GATEWAY_TAG="${USER_ID} gateway for http ec2"
-[root@server ~]# aws ec2 create-tags --resources ${GATEWAY_ID} --tags "Key=Name,Value=${GATEWAY_TAG}"
-[root@server ~]# aws ec2 describe-internet-gateways --internet-gateway-ids ${GATEWAY_ID}
-{
-    "InternetGateways": [
-        {
-            "Attachments": [],
-            "InternetGatewayId": "igw-???",
-            "OwnerId": "773217231744",
-            "Tags": [
-                {
-                    "Key": "Name",
-                    "Value": "hashimoto-j gateway for http ec2"
-                }
-            ]
-        }
-    ]
-}
+### Internet Gateway IDを環境変数に設定
+
+`.bashrc`に追加する。
+```bash
+$ $ echo "export WEB_VPC_GATEWAY_ID="`aws ec2 describe-internet-gateways --filters Name=tag:Name,Values="web vpc gateway" --query "InternetGateways[].InternetGatewayId" --output text` >> ~/.bashrc
 ```
 
-マネジメントコンソールで名前が付いていることを確認する
+末尾に追加されたことを確認。
+```bash
+$ tail -n 3 ~/.bashrc 
+export WEB_VPC_ID=vpc-071e097c0376444bb
+export WEB_VPC_SUBNET_ID=subnet-0afdf5923858ea8f0
+export WEB_VPC_GATEWAY_ID=igw-06566e29cbf0e6ecc
+```
+
+環境変数を確認。
+```bash
+$ . ~/.bashrc 
+$ echo $WEB_VPC_GATEWAY_ID
+igw-06566e29cbf0e6ecc
+```
 
 ## Internet GatewayをVPCにアタッチする（関連付ける）
 
-```bash=
-[root@server ~]# aws ec2 attach-internet-gateway --internet-gateway-id ${GATEWAY_ID} --vpc-id ${VPC_ID}
-[root@server ~]# aws ec2 describe-internet-gateways --internet-gateway-id ${GATEWAY_ID} --query 'InternetGateways[]'
+```bash
+$ aws ec2 attach-internet-gateway --internet-gateway-id ${WEB_VPC_GATEWAY_ID} --vpc-id ${WEB_VPC_ID}
+```
+
+VPCにアタッチされたことを確認する。
+
+```bash
+$ aws ec2 describe-internet-gateways --internet-gateway-id ${WEB_VPC_GATEWAY_ID} --query 'InternetGateways[]'
 [
     {
         "Attachments": [
             {
                 "State": "available",
-                "VpcId": "vpc-???"
+                "VpcId": "vpc-071e097c0376444bb"
             }
         ],
-        "InternetGatewayId": "igw-???",
-        "OwnerId": "773217231744",
+        "InternetGatewayId": "igw-06566e29cbf0e6ecc",
+        "OwnerId": "937264738810",
         "Tags": [
             {
                 "Key": "Name",
-                "Value": "hashimoto-j gateway for http ec2"
+                "Value": "web vpc gateway"
             }
         ]
     }
 ]
 ```
 
-アタッチされたVPCのIDが確認できる。
+## RouteTableに名前を付ける
 
-## RouteTableのIDを取得
+## インターネットへのルートを追加
 
-VPC作成時に自動的にRoute Tableが作成されている。ルーティングを設定するために、Route TableのIDを取得する。
+- メインルートテーブル
+  - 他のルートテーブルに明示的に関連付けられていないすべてのサブネットのルーティングを制御する
+    - VPCを作成するとメインルートテーブルが自動的に割り当てられる。
+    - 作成されたルートテーブルには、VPC内のルーティングが既に設定されている。
 
-```bash=
-[root@server ~]# aws ec2 describe-route-tables --filter "Name=vpc-id,Values=${VPC_ID}" --query 'RouteTables[]'
+ここでは、デフォルトルートの宛先をInternet GatewayにしてRoute Tableに追加する。これによりVPC内部宛て以外の通信はすべてインターネットに送られることになる。
+
+TODO:
+デフォルトルートとは
+
+**この設定をしないと、クライアントからインターネット越しにVPC内への通信はできない。**
+
+### RouteTableのIDを取得
+
+VPC作成時に自動的にRoute Tableが作成されている。
+
+```bash
+$ aws ec2 describe-route-tables --filter "Name=vpc-id,Values=${WEB_VPC_ID}" --query 'RouteTables[]'
 [
     {
         "Associations": [
             {
                 "Main": true,
-                "RouteTableAssociationId": "rtbassoc-00382ad004d79439f",
-                "RouteTableId": "rtb-???",
+                "RouteTableAssociationId": "rtbassoc-05db6162ba04b5fc1",
+                "RouteTableId": "rtb-06dadc6127a662bb4",
                 "AssociationState": {
                     "State": "associated"
                 }
             }
         ],
         "PropagatingVgws": [],
-        "RouteTableId": "rtb-???",
+        "RouteTableId": "rtb-06dadc6127a662bb4",
         "Routes": [
             {
                 "DestinationCidrBlock": "192.168.10.0/24",
@@ -259,124 +294,90 @@ VPC作成時に自動的にRoute Tableが作成されている。ルーティン
             }
         ],
         "Tags": [],
-        "VpcId": "vpc-???",
-        "OwnerId": "773217231744"
-    }
-]
-[root@server ~]# export ROUTE_TABLE_ID="rtb-???"
-[root@server ~]# echo $ROUTE_TABLE_ID 
-rtb-???
-```
-
-## Route Tableに名前をつける
-```bash=
-[root@server ~]# export ROUTE_TABLE_TAG="${USER_ID} route table for http ec2"
-[root@server ~]# echo $ROUTE_TABLE_TAG
-hashimoto-j route table for http ec2
-[root@server ~]# aws ec2 create-tags --resources ${ROUTE_TABLE_ID} --tags "Key=Name,Value=${ROUTE_TABLE_TAG}"
-[root@server ~]# aws ec2 describe-route-tables --filter "Name=route-table-id,Values=${ROUTE_TABLE_ID}" --query 'RouteTables[].Tags[]'
-[
-    {
-        "Key": "Name",
-        "Value": "hashimoto-j route table for http ec2"
+        "VpcId": "vpc-071e097c0376444bb",
+        "OwnerId": "937264738810"
     }
 ]
 ```
 
-マネジメントコンソールで名前が付いていることを確認する
+### Route TableのIDを環境変数に設定
 
-## Route Tableにルーティングルールを追加
+ルーティングを設定するために、Route TableのIDを取得する。
 
-VPC作成時に自動的に作成されたRoute Tableには、VPC内のルーティングが既に設定されている。
+```bash
+$ echo "export WEB_VPC_ROUTE_TABLE_ID="`aws ec2 describe-route-tables --filter "Name=vpc-id,Values=${WEB_VPC_ID}" --query 'RouteTables[].RouteTableId' --output text` >> ~/.bashrc
+$ tail -n 3 ~/.bashrc
+export WEB_VPC_GATEWAY_ID=igw-06566e29cbf0e6ecc
+export WEB_VPC_ROUTE_TABLE_ID=
+export WEB_VPC_ROUTE_TABLE_ID=rtb-06dadc6127a662bb4
+$ . ~/.bashrc
+$ echo $WEB_VPC_ROUTE_TABLE_ID 
+rtb-06dadc6127a662bb4
+```
 
-ここでは、デフォルトルートの宛先をInternet GatewayにしてRoute Tableに追加する。これによりVPC内部宛て以外の通信はすべてインターネットに送られることになる。
+### Route Tableにルーティングルールを追加
 
-この設定をしないと、クライアントからインターネット越しにVPC内への通信はできない。
+デフォルトルート`0.0.0.0/0`を追加する。
 
-```bash=
-[root@server ~]# export DESTINATION_CIDR_BLOCK="0.0.0.0/0"
-[root@server ~]# aws ec2 create-route --route-table-id ${ROUTE_TABLE_ID} --destination-cidr-block ${DESTINATION_CIDR_BLOCK} --gateway-id ${GATEWAY_ID}
+```bash
+$ aws ec2 create-route --route-table-id ${WEB_VPC_ROUTE_TABLE_ID} --destination-cidr-block "0.0.0.0/0" --gateway-id ${WEB_VPC_GATEWAY_ID}
 {
     "Return": true
 }
-[root@server ~]# aws ec2 describe-route-tables --filter "Name=route-table-id,Values=${ROUTE_TABLE_ID}"
-{
-    "RouteTables": [
-        {
-            "Associations": [
-                {
-                    "Main": true,
-                    "RouteTableAssociationId": "rtbassoc-00382ad004d79439f",
-                    "RouteTableId": "rtb-???",
-                    "AssociationState": {
-                        "State": "associated"
-                    }
-                }
-            ],
-            "PropagatingVgws": [],
-            "RouteTableId": "rtb-???",
-            "Routes": [
-                {
-                    "DestinationCidrBlock": "192.168.10.0/24",
-                    "GatewayId": "local",
-                    "Origin": "CreateRouteTable",
-                    "State": "active"
-                },
-                {
-                    "DestinationCidrBlock": "0.0.0.0/0",
-                    "GatewayId": "igw-???",
-                    "Origin": "CreateRoute",
-                    "State": "active"
-                }
-            ],
-            "Tags": [
-                {
-                    "Key": "Name",
-                    "Value": "hashimoto-j route table for http ec2"
-                }
-            ],
-            "VpcId": "vpc-???",
-            "OwnerId": "773217231744"
-        }
-    ]
-}
 ```
-`Routes`にデフォルトルートが追加されたことが確認できる。
 
-```json=
-{
-    "DestinationCidrBlock": "0.0.0.0/0",
-    "GatewayId": "igw-???",
-    "Origin": "CreateRoute",
-    "State": "active"
-}
+ルーティングテーブルにデフォルトルートが追加されたことを確認する。
+
 ```
+$ aws ec2 describe-route-tables --filter "Name=route-table-id,Values=${WEB_VPC_ROUTE_TABLE_ID}" --query "RouteTables[].Routes[]"
+[
+    {
+        "DestinationCidrBlock": "192.168.10.0/24",
+        "GatewayId": "local",
+        "Origin": "CreateRouteTable",
+        "State": "active"
+    },
+    {
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "GatewayId": "igw-06566e29cbf0e6ecc",
+        "Origin": "CreateRoute",
+        "State": "active"
+    }
+]
+```
+TODO:
+"export REP_ROOT_PATH=`PWD`"
 
 ## Route TableをSubnetに関連付ける
-```bash=
-[root@server ~]# aws ec2 associate-route-table --subnet-id ${SUBNET_ID} --route-table-id ${ROUTE_TABLE_ID}
+```bash
+$ aws ec2 associate-route-table --subnet-id ${WEB_VPC_SUBNET_ID} --route-table-id ${WEB_VPC_ROUTE_TABLE_ID}
 {
-    "AssociationId": "rtbassoc-???",
+    "AssociationId": "rtbassoc-0b241ce66e1bd61c9",
     "AssociationState": {
         "State": "associated"
     }
 }
-[root@server ~]# aws ec2 describe-route-tables --filter "Name=route-table-id,Values=${ROUTE_TABLE_ID}" --query 'RouteTables[].Associations'
+```
+
+Route TableとSubnetが関連付けられたことを確認する
+
+```bash
+$ aws ec2 describe-route-tables --filter "Name=route-table-id,Values=${WEB_VPC_ROUTE_TABLE_ID}" --query 'RouteTables[].Associations'
 [
     [
         {
             "Main": true,
-            "RouteTableAssociationId": "rtbassoc-00382ad004d79439f",
-            "RouteTableId": "rtb-???",
+            "RouteTableAssociationId": "rtbassoc-05db6162ba04b5fc1",
+            "RouteTableId": "rtb-06dadc6127a662bb4",
             "AssociationState": {
                 "State": "associated"
             }
         },
         {
             "Main": false,
-            "RouteTableAssociationId": "rtbassoc-???",
-            "RouteTableId": "rtb-???",
-            "SubnetId": "subnet-???",
+            "RouteTableAssociationId": "rtbassoc-0b241ce66e1bd61c9",
+            "RouteTableId": "rtb-06dadc6127a662bb4",
+            "SubnetId": "subnet-0afdf5923858ea8f0",
             "AssociationState": {
                 "State": "associated"
             }
@@ -384,5 +385,3 @@ VPC作成時に自動的に作成されたRoute Tableには、VPC内のルーテ
     ]
 ]
 ```
-
-Route TableとSubnetが関連付けられたことが確認できる。

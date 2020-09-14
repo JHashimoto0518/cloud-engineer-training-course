@@ -25,3 +25,4 @@
 
 ### day-02
 - [Intoduction](./day-02/README.md)
+- [VPCの作成](./day-02/create_vpc.md)
