@@ -10,6 +10,6 @@ Debug.Assert(commandLines.FirstOrDefault() == "");
 
 // to script file
 // TODO:consider newline 
-const string ScriptPath = "./day-02.sh";
+const string ScriptPath = "./day-02/create_resources.sh";
 File.Delete(ScriptPath);
 File.AppendAllLines(ScriptPath, commandLines);
