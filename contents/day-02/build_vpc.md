@@ -285,6 +285,8 @@ $ aws ec2 describe-internet-gateways --internet-gateway-id ${WEB_VPC_GATEWAY_ID}
 TODO:
 デフォルトルートとは
 
+ルートテーブルの表を作成
+
 ### メインルートテーブルが存在することを確認
 ```bash
 $ aws ec2 describe-route-tables --filter "Name=vpc-id,Values=${WEB_VPC_ID}"
