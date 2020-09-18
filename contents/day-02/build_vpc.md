@@ -468,3 +468,8 @@ $ aws ec2 describe-route-tables --filter "Name=vpc-id,Values=${WEB_VPC_ID}"
     ]
 }
 ```
+
+## 参考
+
+- [Amazon VPC オプションを有効化してプライベートホストゾーンを使用する](https://aws.amazon.com/jp/premiumsupport/knowledge-center/vpc-enable-private-hosted-zone/)
+- [VPC での DNS の使用 - Amazon Virtual Private Cloud](https://docs.aws.amazon.com/ja_jp/vpc/latest/userguide/vpc-dns.html)
