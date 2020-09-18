@@ -1,0 +1,35 @@
+@startuml architecture_after
+
+!define AWSPuml https://raw.githubusercontent.com/awslabs/aws-icons-for-plantuml/master/dist
+!includeurl AWSPuml/AWSCommon.puml
+
+!includeurl AWSPuml/EndUserComputing/all.puml
+!includeurl AWSPuml/NetworkingAndContentDelivery/all.puml
+!includeurl AWSPuml/GroupIcons/all.puml
+!includeurl AWSPuml/General/all.puml
+!includeurl AWSPuml/Compute/EC2.puml
+
+'!includeurl AWSPuml/AWSSimplified.puml
+
+'skinparam linetype polyline
+skinparam linetype ortho
+
+Cloudalt(cloud, "AWS", "AWSアカウント") {
+    Region(region, "東京リージョン", "ap-northeast-1") {
+        VPC(defaultVpc, "デフォルトVPC", "no name") {
+            VPCSubnetPublic(defaultSubnet, "パブリックサブネット", "no name") {
+                EC2(cli, "AWS CLI実行環境", "Cetc-Cli-Server")
+            }
+        }
+        VPC(webVpc, "公開Webサイト用VPC", "Web-VPC") {
+            VPCSubnetPublic(webSubnet, "パブリックサブネット", "Web-VPC-Subnet") {
+                EC2(web, "Webサーバー", "Cetc-Web-Server")
+            }
+        }
+    }
+}
+Client(cl, "ローカルPC", "作業環境")
+
+cl 0-right->web : SSH
+cl 0-right->cli : SSH
+@enduml

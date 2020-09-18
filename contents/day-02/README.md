@@ -15,5 +15,8 @@
 
 ## システム構成
 
-- TODO:
+### day-01
+![](diagrams/architecture_before.png)
 
+### day-02
+![](diagrams/architecture_after.png)
