@@ -12,10 +12,13 @@
 
 ## VPCの作成
 
-| 属性 | 値 |　
-| --------| -------- |
-| リソース名 | web-vpc |
-| CIDR | 192.168.10.0/24|
+| 属性 | 値 | 意味 |
+| --------| -------- | --------|
+| リソース名 | web-vpc |  |
+| CIDR | 192.168.10.0/24 | このVPCに割り当てるネットワーク |
+| DNS解決 | 有効 | DNS解決がサポートされているか |
+| DNSホスト名 | 有効 | このVPCにあるEC2インスタンスがパブリックDNSホスト名を取得するか |
+
 
 ```bash
 $ aws ec2 create-vpc --cidr-block 192.168.10.0/24 --tag-specifications ResourceType=vpc,Tags="[{Key=Name,Value=web-vpc}]"
@@ -50,7 +53,7 @@ $ aws ec2 create-vpc --cidr-block 192.168.10.0/24 --tag-specifications ResourceT
 
 ### VPCのIDを環境変数に設定
 
-`.bashrc`に追加する。
+環境変数を`.bashrc`に追加する。
 ```bash
 $ echo "export WEB_VPC_ID="`aws ec2 describe-vpcs --filters Name=tag:Name,Values="web-vpc" --query 'Vpcs[].VpcId' --output text` >> ~/.bashrc
 ```
@@ -70,9 +73,54 @@ $ echo $WEB_VPC_ID
 vpc-071e097c0376444bb
 ```
 
+TODO: 説明リハーサル
+
 以降リソースをつくるときは、この流れは同じ。
 1. リソース作成
 2. リソースのIDを環境変数に設定
+
+## DNS解決
+
+設定値を確認する。
+
+```bash
+[ec2-user@ip-172-31-37-34 ~]$ aws ec2 describe-vpc-attribute --vpc-id ${WEB_VPC_ID} --attribute enableDnsSupport
+{
+    "VpcId": "vpc-06b8bc583831e40c6",
+    "EnableDnsSupport": {
+        "Value": true
+    }
+}
+```
+
+有効になっているので、設定不要。
+
+## DNSホスト名
+
+設定値を確認する。
+
+```bash
+[ec2-user@ip-172-31-37-34 ~]$ aws ec2 describe-vpc-attribute --vpc-id ${WEB_VPC_ID} --attribute enableDnsHostnames
+{
+    "VpcId": "vpc-06b8bc583831e40c6",
+    "EnableDnsHostnames": {
+        "Value": false
+    }
+}
+```
+
+無効になっているので、有効にする。
+
+```bash
+[ec2-user@ip-172-31-37-34 ~]$ aws ec2 modify-vpc-attribute --vpc-id ${WEB_VPC_ID} --enable-dns-hostnames
+[ec2-user@ip-172-31-37-34 ~]$ aws ec2 describe-vpc-attribute --vpc-id ${WEB_VPC_ID} --attribute enableDnsHostnames
+{
+    "VpcId": "vpc-06b8bc583831e40c6",
+    "EnableDnsHostnames": {
+        "Value": true
+    }
+}
+```
 
 ## サブネットの作成
 
@@ -120,7 +168,7 @@ AZが３つあることがわかる。どのAZを使っても同じだが、今�
 
 ### サブネットの作成
 
-| 属性 | 値 |　
+| 属性 | 値 |
 | --------| -------- |
 | リソース名 | web-vpc-subnet |
 | CIDR | 192.168.10.0/25 |
