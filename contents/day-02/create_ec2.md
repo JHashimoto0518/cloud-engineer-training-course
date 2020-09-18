@@ -1,14 +1,16 @@
-Webサーバー用EC2インスタンスを作成する
-=
+# Webサーバー用EC2インスタンスを作成する
 
 ## ステップ
+
 1. セキュリティグループ作成
 2. インスタンス作成
 
 # 前提
+
 - VPC構築の環境変数が設定されていること
 
 # 環境変数の設定
+TODO:
 
 ```bash
 $ vim set_variables.sh
@@ -39,19 +41,8 @@ echo $S3_BUCKET_NAME
 www.jhashimoto.soft-think.com
 ```
 
-| 属性 | 値 |
-| --------| -------- |
-| リソース名 | cetc-web-server |
-
-
-| 変数名 | 意味 | 例 |
-| -------- | -------- | -------- |
-|  S    | CentOS-SVのPublic IPアドレス   |  |
-|  EC2_p_ip???    | EC2インスタンスのPublic IPアドレス    |  |
-|  i-???    |  インスタンスのインスタンスID   | i-9k4rd8c8... |
-|  sg-id???   |   インスタンスに設定するセキュリティグループのGroup ID  | sg-.... |
-
 ## ローカルPCのグローバルIPアドレスを確認
+
 `cetc_cli_server`にログインする前に、クライアントからの通信に使用されているグローバルIPアドレスを確認しておく。
 
 ```bash
@@ -65,6 +56,11 @@ xxx.xxx.xxx.xxx
 インスタンスに必要なリソースを作成する。
 
 ### セキュリティグループを作成
+
+| 属性       | 値                 | 意味     |
+| ---------- | ------------------ | ---- |
+| リソース名 | cetc-web-sg |      |
+| VPC        | web-vpc            | どのVPCに属するか  |
 
 ローカルPCのグローバルIPアドレスを環境変数に設定しておく。
 ```bash
@@ -80,7 +76,12 @@ $ export CLIENT_GLOBAL_IP=xxx.xxx.xxx.xxx
 sg-0d1e1f0ce929e34ab
 ```
 
-SSHとHTTPを許可する。
+許可する通信を設定する。
+
+| プロトコル | 通信元     |
+| ---------- | ---------- |
+| SSH        | ローカルPC |
+| HTTP       | 制限なし   |
 
 ```bash
 $ aws ec2 authorize-security-group-ingress --group-id ${WEB_SG_ID} --protocol tcp --port 22 --cidr ${CLIENT_GLOBAL_IP}/32
@@ -151,8 +152,20 @@ $ [ec2-user@ip-172-31-37-34 ~]$ aws ec2 describe-security-groups --group-id ${WE
 ## Webサーバー用インスタンスの作成
 
 インスタンスを作成する。
+
+| 属性                 | 値                 |
+| -------------------- | ------------------ |
+| リソース名           | cetc-web-server    |
+| AMI                  | Amazon Linux 2     |
+| サブネット           | web-vpc-subnet     |
+| セキュリティグループ | cetc-web-sg |
+| インスタンスタイプ   | t2.micro           |
+| キーペア             | cetc               |
+| 削除保護             | 有効               |
+
+
 ```bash=
-$ aws ec2 run-instances --image-id ami-0cc75a8978fbbc969 --subnet-id ${WEB_VPC_SUBNET_ID} --security-group-ids ${WEB_SG_ID} --instance-type t2.micro --key-name cetc2 --disable-api-termination  --tag-specifications ResourceType=instance,Tags="[{Key=Name,Value=cetc-web-server}]"
+$ aws ec2 run-instances --image-id ami-0cc75a8978fbbc969 --subnet-id ${WEB_VPC_SUBNET_ID} --security-group-ids ${WEB_SG_ID} --instance-type t2.micro --key-name cetc --disable-api-termination  --tag-specifications ResourceType=instance,Tags="[{Key=Name,Value=cetc-web-server}]"
 {
     "Groups": [],
     "Instances": [
