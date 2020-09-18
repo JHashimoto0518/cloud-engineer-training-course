@@ -23,7 +23,7 @@ Cloudalt(cloud, "AWS", "AWSアカウント") {
         }
     }
 }
-Client(cl, "ローカルPC", "作業環境")
+Client(cl, "ローカルPC", "実習者")
 
 cl 0-right->cli : SSH
 @enduml

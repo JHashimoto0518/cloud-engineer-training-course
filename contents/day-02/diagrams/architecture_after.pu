@@ -28,8 +28,11 @@ Cloudalt(cloud, "AWS", "AWSアカウント") {
         }
     }
 }
-Client(cl, "ローカルPC", "作業環境")
+Client(cl, "ローカルPC", "実習者")
+Client(other, "PC, Tablet, SmartPhone...", "Anyone in Internet")
 
 cl 0-right->web : SSH
 cl 0-right->cli : SSH
+other 0-left->web : http
+
 @enduml

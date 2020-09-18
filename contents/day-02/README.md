@@ -15,8 +15,9 @@
 
 ## システム構成
 
-### day-01
+### 現在（day-01）
 ![](diagrams/architecture_before.png)
 
-### day-02
+### day-02のゴール
+
 ![](diagrams/architecture_after.png)
