@@ -147,7 +147,7 @@ $ aws ec2 describe-security-groups \
 | セキュリティグループ | cetc-web-sg |
 | インスタンスタイプ   | t2.micro           |
 | キーペア             | cetc               |
-| **パブリックIPアドレス関連付け** | 有効 |
+| パブリックIPアドレス関連付け | 有効 |
 | 削除保護             | 有効               |
 
 ```bash
@@ -176,15 +176,13 @@ $ aws ec2 run-instances \
 
 ### インスタンスIDを環境変数に設定
 
-**set_variables_day_02.sh **
 ```bash
-$ export WEB_EC2_INSTANCE_ID=i-xxx
-```
-
-```bash
-$ . ~/set_variables_day_02.sh 
+$ echo "export WEB_EC2_INSTANCE_ID=`aws ec2 describe-instances \
+--filters Name=tag:Name,Values="cetc-web-server" \
+--query 'Reservations[].Instances[].InstanceId' \
+--output text`" >> ~/set_variables_day_02.sh
+$ . ~/set_variables_day_02.sh
 $ echo $WEB_EC2_INSTANCE_ID
-i-xxx
 ```
 
 ### インスタンス作成完了の確認

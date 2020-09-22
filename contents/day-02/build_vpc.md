@@ -21,7 +21,9 @@
 
 
 ```bash
-$ aws ec2 create-vpc --cidr-block 192.168.10.0/24 --tag-specifications ResourceType=vpc,Tags="[{Key=Name,Value=web-vpc}]"
+$ aws ec2 create-vpc \
+--cidr-block 192.168.10.0/24 \
+--tag-specifications ResourceType=vpc,Tags="[{Key=Name,Value=web-vpc}]"
 {
     "Vpc": {
         "CidrBlock": "192.168.10.0/24",
@@ -53,27 +55,26 @@ $ aws ec2 create-vpc --cidr-block 192.168.10.0/24 --tag-specifications ResourceT
 
 ### VPCのIDを環境変数に設定
 
-環境変数を`.bashrc`に追加する。
+環境変数を`~/set_variables_day_02.sh`に追加する。
 ```bash
-$ echo "export WEB_VPC_ID="`aws ec2 describe-vpcs --filters Name=tag:Name,Values="web-vpc" --query 'Vpcs[].VpcId' --output text` >> ~/.bashrc
+$ echo "export WEB_VPC_ID="`aws ec2 describe-vpcs \
+--filters Name=tag:Name,Values="web-vpc" \
+--query 'Vpcs[].VpcId' \
+--output text` >> ~/set_variables_day_02.sh
 ```
 
 末尾に追加されたことを確認。
 ```bash
-$ tail -n 3 ~/.bashrc
-export S3_BUCKET_NAME=www.$ID.soft-think.com
-export S3_ETL_BUCKET_NAME=etl.$ID.soft-think.com
+$ tail -n 1 ~/set_variables_day_02.sh
 export WEB_VPC_ID=vpc-071e097c0376444bb
 ```
 
 環境変数を確認。
 ```bash
-$ . ~/.bashrc
+$ . ~/set_variables_day_02.sh
 $ echo $WEB_VPC_ID 
 vpc-071e097c0376444bb
 ```
-
-TODO: 説明リハーサル
 
 以降リソースをつくるときは、この流れは同じ。
 1. リソース作成
@@ -84,7 +85,9 @@ TODO: 説明リハーサル
 設定値を確認する。
 
 ```bash
-[ec2-user@ip-172-31-37-34 ~]$ aws ec2 describe-vpc-attribute --vpc-id ${WEB_VPC_ID} --attribute enableDnsSupport
+$ aws ec2 describe-vpc-attribute \
+--vpc-id ${WEB_VPC_ID} \
+--attribute enableDnsSupport
 {
     "VpcId": "vpc-06b8bc583831e40c6",
     "EnableDnsSupport": {
@@ -100,7 +103,9 @@ TODO: 説明リハーサル
 設定値を確認する。
 
 ```bash
-[ec2-user@ip-172-31-37-34 ~]$ aws ec2 describe-vpc-attribute --vpc-id ${WEB_VPC_ID} --attribute enableDnsHostnames
+$ aws ec2 describe-vpc-attribute \
+--vpc-id ${WEB_VPC_ID} \
+--attribute enableDnsHostnames
 {
     "VpcId": "vpc-06b8bc583831e40c6",
     "EnableDnsHostnames": {
@@ -112,8 +117,12 @@ TODO: 説明リハーサル
 無効になっているので、有効にする。
 
 ```bash
-[ec2-user@ip-172-31-37-34 ~]$ aws ec2 modify-vpc-attribute --vpc-id ${WEB_VPC_ID} --enable-dns-hostnames
-[ec2-user@ip-172-31-37-34 ~]$ aws ec2 describe-vpc-attribute --vpc-id ${WEB_VPC_ID} --attribute enableDnsHostnames
+$ aws ec2 modify-vpc-attribute \
+--vpc-id ${WEB_VPC_ID} \
+--enable-dns-hostnames
+$ aws ec2 describe-vpc-attribute \
+--vpc-id ${WEB_VPC_ID} \
+--attribute enableDnsHostnames
 {
     "VpcId": "vpc-06b8bc583831e40c6",
     "EnableDnsHostnames": {
@@ -175,7 +184,11 @@ AZが３つあることがわかる。どのAZを使っても同じだが、今�
 | AZ | ap-northeast-1a |
 
 ```bash
-$ aws ec2 create-subnet --vpc-id ${WEB_VPC_ID} --cidr-block 192.168.10.0/25 --availability-zone ap-northeast-1a --tag-specifications ResourceType=subnet,Tags="[{Key=Name,Value=web-vpc-subnet}]"
+$ aws ec2 create-subnet \
+--vpc-id ${WEB_VPC_ID} \
+--cidr-block 192.168.10.0/25 \
+--availability-zone ap-northeast-1a \
+--tag-specifications ResourceType=subnet,Tags="[{Key=Name,Value=web-vpc-subnet}]"
 {
     "Subnet": {
         "AvailabilityZone": "ap-northeast-1a",
@@ -203,10 +216,13 @@ $ aws ec2 create-subnet --vpc-id ${WEB_VPC_ID} --cidr-block 192.168.10.0/25 --av
 
 ### サブネットIDを環境変数に設定
 
-`.bashrc`に追加する。
+`~/set_variables_day_02.sh`に追加する。
 ```bash
-$ echo "export WEB_VPC_SUBNET_ID="`aws ec2 describe-subnets --filters Name=tag:Name,Values="web-vpc-subnet" --query "Subnets[].SubnetId" --output text` >> ~/.bashrc
-$ . ~/.bashrc
+$ echo "export WEB_VPC_SUBNET_ID="`aws ec2 describe-subnets \
+--filters Name=tag:Name,Values="web-vpc-subnet" \
+--query "Subnets[].SubnetId" \
+--output text` >> ~/set_variables_day_02.sh
+$ . ~/set_variables_day_02.sh
 $ echo $WEB_VPC_SUBNET_ID
 subnet-0afdf5923858ea8f0
 ```
@@ -214,7 +230,8 @@ subnet-0afdf5923858ea8f0
 ## インターネットゲートウェイの作成
 
 ```bash
-$ aws ec2 create-internet-gateway --tag-specifications ResourceType=internet-gateway,Tags="[{Key=Name,Value=web-vpc-gateway}]"
+$ aws ec2 create-internet-gateway \
+--tag-specifications ResourceType=internet-gateway,Tags="[{Key=Name,Value=web-vpc-gateway}]"
 {
     "InternetGateway": {
         "Attachments": [],
@@ -232,10 +249,13 @@ $ aws ec2 create-internet-gateway --tag-specifications ResourceType=internet-gat
 
 ### インターネットゲートウェイのIDを環境変数に設定
 
-`.bashrc`に追加する。
+`~/set_variables_day_02.sh`に追加する。
 ```bash
-$ echo "export WEB_VPC_GATEWAY_ID="`aws ec2 describe-internet-gateways --filters Name=tag:Name,Values="web-vpc-gateway" --query "InternetGateways[].InternetGatewayId" --output text` >> ~/.bashrc
-$ . ~/.bashrc 
+$ echo "export WEB_VPC_GATEWAY_ID="`aws ec2 describe-internet-gateways \
+--filters Name=tag:Name,Values="web-vpc-gateway" \
+--query "InternetGateways[].InternetGatewayId" \
+--output text` >> ~/set_variables_day_02.sh
+$ . ~/set_variables_day_02.sh
 $ echo $WEB_VPC_GATEWAY_ID
 igw-06566e29cbf0e6ecc
 ```
@@ -244,13 +264,17 @@ igw-06566e29cbf0e6ecc
 作成したインターネットゲートウェイをVPCに関連付ける。
 
 ```bash
-$ aws ec2 attach-internet-gateway --internet-gateway-id ${WEB_VPC_GATEWAY_ID} --vpc-id ${WEB_VPC_ID}
+$ aws ec2 attach-internet-gateway \
+--internet-gateway-id ${WEB_VPC_GATEWAY_ID} \
+--vpc-id ${WEB_VPC_ID}
 ```
 
 VPCにアタッチされたことを確認する。
 
 ```bash
-$ aws ec2 describe-internet-gateways --internet-gateway-id ${WEB_VPC_GATEWAY_ID} --query 'InternetGateways[]'
+$ aws ec2 describe-internet-gateways \
+--internet-gateway-id ${WEB_VPC_GATEWAY_ID} \
+--query 'InternetGateways[]'
 [
     {
         "Attachments": [
@@ -278,18 +302,17 @@ $ aws ec2 describe-internet-gateways --internet-gateway-id ${WEB_VPC_GATEWAY_ID}
     - VPCを作成するとメインルートテーブルが自動的に割り当てられる。
     - 作成されたルートテーブルには、VPC内のルーティングが既に設定されている。
 - カスタムルートテーブル
-  - ルーティング設定ミスにより通信ができなくなることを防ぐため、メインルートテーブルは変更しないことが推奨されている。
+  - VPC内の通信を保護するため、メインルートテーブルは変更しないことが推奨されている。
   - カスタムルートテーブルを追加し、デフォルトルートの宛先をインターネットゲートウェイにして、カスタムルートテーブルに追加する。
-  - これによりVPC内部宛て以外の通信はすべてインターネットに送られることになる。つまり**この設定をしないと、クライアントからインターネット越しにVPC内への通信はできない。**
-
-TODO:
-デフォルトルートとは
-
-ルートテーブルの表を作成
+  - これによりVPC内部宛て以外の通信はすべてインターネットに送られることになる。言い換えると、**この設定をしないと、VPC内からインターネットへの通信はできない。**
+- デフォルトルートとは
+    - ルーティングのデフォルト設定。宛先がルートテーブルにない通信は、すべてデフォルトルートの宛先に送られる。
 
 ### メインルートテーブルが存在することを確認
+
 ```bash
-$ aws ec2 describe-route-tables --filter "Name=vpc-id,Values=${WEB_VPC_ID}"
+$ aws ec2 describe-route-tables \
+--filter "Name=vpc-id,Values=${WEB_VPC_ID}"
 {
     "RouteTables": [
         {
@@ -323,7 +346,9 @@ $ aws ec2 describe-route-tables --filter "Name=vpc-id,Values=${WEB_VPC_ID}"
 
 ### カスタムルートテーブルを作成
 ```bash
-[ec2-user@ip-172-31-37-34 ~]$ aws ec2 create-route-table --vpc-id ${WEB_VPC_ID} --tag-specifications ResourceType=route-table,Tags="[{Key=Name,Value=web-vpc-route-table}]"
+$ aws ec2 create-route-table \
+--vpc-id ${WEB_VPC_ID} \
+--tag-specifications ResourceType=route-table,Tags="[{Key=Name,Value=web-vpc-route-table}]"
 {
     "RouteTable": {
         "Associations": [],
@@ -350,10 +375,13 @@ $ aws ec2 describe-route-tables --filter "Name=vpc-id,Values=${WEB_VPC_ID}"
 ```
 #### カスタムルートテーブルIDを環境変数に設定
 
-`.bashrc`に追加する。
+`~/set_variables_day_02.sh`に追加する。
 ```bash
-$ echo "export WEB_VPC_ROUTE_TABLE_ID="`aws ec2 describe-route-tables --filters Name=tag:Name,Values="web-vpc-route-table" --query "RouteTables[].RouteTableId" --output text` >> ~/.bashrc
-$ . ~/.bashrc 
+$ echo "export WEB_VPC_ROUTE_TABLE_ID="`aws ec2 describe-route-tables \
+--filters Name=tag:Name,Values="web-vpc-route-table" \
+--query "RouteTables[].RouteTableId" \
+--output text` >> ~/set_variables_day_02.sh
+$ . ~/set_variables_day_02.sh 
 $ echo $WEB_VPC_ROUTE_TABLE_ID
 rtb-0b59a183c11d8e40a
 ```
@@ -362,7 +390,10 @@ rtb-0b59a183c11d8e40a
 カスタムルートテーブルにデフォルトルート`0.0.0.0/0`を追加する。
 
 ```bash
-$ aws ec2 create-route --route-table-id ${WEB_VPC_ROUTE_TABLE_ID} --destination-cidr-block "0.0.0.0/0" --gateway-id ${WEB_VPC_GATEWAY_ID}
+$ aws ec2 create-route \
+--route-table-id ${WEB_VPC_ROUTE_TABLE_ID} \
+--destination-cidr-block "0.0.0.0/0" \
+--gateway-id ${WEB_VPC_GATEWAY_ID}
 {
     "Return": true
 }
@@ -371,7 +402,9 @@ $ aws ec2 create-route --route-table-id ${WEB_VPC_ROUTE_TABLE_ID} --destination-
 ルーティングテーブルにデフォルトルートが追加されたことを確認する。
 
 ```bash
-$ aws ec2 describe-route-tables --filter "Name=route-table-id,Values=${WEB_VPC_ROUTE_TABLE_ID}" --query "RouteTables[].Routes[]"
+$ aws ec2 describe-route-tables \
+--filter "Name=route-table-id,Values=${WEB_VPC_ROUTE_TABLE_ID}" \
+--query "RouteTables[].Routes[]"
 [
     {
         "DestinationCidrBlock": "192.168.10.0/24",
@@ -390,7 +423,9 @@ $ aws ec2 describe-route-tables --filter "Name=route-table-id,Values=${WEB_VPC_R
 
 ### カスタムルートテーブルをサブネットに関連付ける
 ```bash
-$ aws ec2 associate-route-table --subnet-id ${WEB_VPC_SUBNET_ID} --route-table-id ${WEB_VPC_ROUTE_TABLE_ID}
+$ aws ec2 associate-route-table \
+--subnet-id ${WEB_VPC_SUBNET_ID} \
+--route-table-id ${WEB_VPC_ROUTE_TABLE_ID}
 {
     "AssociationId": "rtbassoc-0f4a609f6737758a2",
     "AssociationState": {
@@ -402,7 +437,8 @@ $ aws ec2 associate-route-table --subnet-id ${WEB_VPC_SUBNET_ID} --route-table-i
 カスタムルートテーブルとサブネットが関連付けられたことを確認する。
 
 ```bash
-$ aws ec2 describe-route-tables --filter "Name=vpc-id,Values=${WEB_VPC_ID}"
+$ aws ec2 describe-route-tables \
+--filter "Name=vpc-id,Values=${WEB_VPC_ID}"
 {
     "RouteTables": [
         {
