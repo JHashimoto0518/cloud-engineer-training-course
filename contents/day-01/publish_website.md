@@ -236,7 +236,24 @@ $ curl http://www.$ID.soft-think.com.s3-website-ap-northeast-1.amazonaws.com/
 ```
 
 ## ブラウザからテスト
+
 ブラウザからWebサイトにアクセスして、コンテンツが表示されればOK。
+
+URLは、http://www.{ID}.soft-think.com.s3-website-ap-northeast-1.amazonaws.com/
+
+`{ID}`は自分のIＤで置き換えること。
+
+## FAQ
+
+### テストに使用するURLとマネジメントコンソールで確認できるURLの書式が異なるのはなぜですか？
+
+S3のオブジェクトにはユニークなURLが割り当てられ、個別に公開することができます。これがマネジメントコンソールの`オブジェクトURL`です。
+![](./publish_website/object_url.png)
+
+手順書に記載したURLは、ウェブサイトホスティングのエンドポイントです。
+![](./publish_website/image-20200922103147450.png)
+
+ウェブサイトが公開されたことをテストしたいので、この実習では後者を使用します。
 
 ## 補足資料
 
