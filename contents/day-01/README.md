@@ -1,6 +1,13 @@
-# day-01
+# Introduction
 
-- 環境構築
-- Hosting static web site on Amazon S3
-- S3の特徴
-- S3の機能
+## ゴール
+
+S3に静的Webサイトをホスティングする
+
+## Amazon S3とは
+
+- 教科書
+	- 3.2 S3を使ったWebサイトの構築
+
+## マネージメントコンソールからファイルをアップロードしてみよう
+
