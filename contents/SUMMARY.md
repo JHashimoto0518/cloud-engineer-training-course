@@ -31,3 +31,8 @@
   - [EC2インスタンスの作成](./day-02/create_ec2.md)
   - [HTTP Serverの構築](./day-02/build_http_server.md)
   - [動的コンテンツの公開](./day-02/configuration_of_cgi.md)
+  - VPCのログ
+    - フローログ
+    - 名前解決
+- HTTP詳説
+  - HTTPリクエスト
