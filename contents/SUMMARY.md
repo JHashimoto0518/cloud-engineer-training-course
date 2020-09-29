@@ -34,5 +34,7 @@
   - VPCのログ
     - フローログ
     - 名前解決
+- EC2インスタンスの管理
+  - [セッションマネージャによる接続](./day-02/connect_with_session_manager.md])
 - HTTP詳説
   - HTTPリクエスト
