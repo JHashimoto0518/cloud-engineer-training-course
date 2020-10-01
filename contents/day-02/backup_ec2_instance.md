@@ -2,11 +2,12 @@
 
 バックアップを取得する前にインスタンスを停止する必要があります。
 
+TODO:
+AMIとは
+
 | 属性       | 値                  |
 | ---------- | ------------------- |
 | イメージ名 | cetc-cli-server-ami |
-
-
 
 ## インスタンスの停止
 
@@ -116,3 +117,7 @@ Every 2.0s: aws ec2 describe-instances --instance-ids i-0...  server.mgt.local: 
 
 TODO: 
 [特定の AWS アカウントと AMI を共有する - Amazon Elastic Compute Cloud/](https://docs.aws.amazon.com/ja_jp/AWSEC2/latest/UserGuide/sharingamis-explicit.html)
+
+アカウント時の注意点
+
+アカウントを閉鎖するとEBSを参照できないので、インスタンスを作成できない。
