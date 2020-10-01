@@ -8,4 +8,4 @@ echo "public_ip: ${public_ip}"
 
 # TODO:sgのallowed ipを変更する
 
-ssh -i ~/keypair/cetc2.pem ec2-user@${public_ip}
+ssh -i ~/keypair/${2}.pem ec2-user@${public_ip}
