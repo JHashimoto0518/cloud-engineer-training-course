@@ -19,7 +19,6 @@
 | DNS解決 | 有効 | DNS解決がサポートされているか |
 | DNSホスト名 | 有効 | このVPCにあるEC2インスタンスがパブリックDNSホスト名を取得するか |
 
-
 ```bash
 $ aws ec2 create-vpc \
 --cidr-block 192.168.10.0/24 \
@@ -60,7 +59,7 @@ $ aws ec2 create-vpc \
 $ echo "export WEB_VPC_ID="`aws ec2 describe-vpcs \
 --filters Name=tag:Name,Values="web-vpc" \
 --query 'Vpcs[].VpcId' \
---output text` >> ~/set_variables_day_02.sh
+--output text` > ~/set_variables_day_02.sh
 ```
 
 末尾に追加されたことを確認。

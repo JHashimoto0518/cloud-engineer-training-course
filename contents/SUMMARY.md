@@ -3,6 +3,7 @@
 - [はじめに](README.md)
 
 ### 環境構築
+
 - [EC2インスタンス作成](./day-01/create_ec2_instance.md)
 - [AWS CLI v2インストール](./day-01/install_awscliv2.md)
 - 補足資料
@@ -35,6 +36,6 @@
     - フローログ
     - 名前解決
 - EC2インスタンスの管理
-  - [セッションマネージャによる接続](./day-02/connect_with_session_manager.md])
-- HTTP詳説
-  - HTTPリクエスト
+  - [セッションマネージャによる接続](./day-02/connect_with_session_manager.md)
+  - [インスタンスのバックアップ](./day-02/backup_ec2_instance.md)
+- [HTTP詳説](./day-02/http_request.md)
