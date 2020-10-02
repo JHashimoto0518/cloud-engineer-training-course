@@ -32,12 +32,14 @@
 - Hosting dynamic web site on Amazon EC2
   - [VPCの構築](./day-02/build_vpc.md)
   - [EC2インスタンスの作成](./day-02/create_ec2.md)
-  - [HTTP Serverの構築](./day-02/build_http_server.md)
+  - [HTTPサーバーの構築](./day-02/build_http_server.md)
   - [動的コンテンツの公開](./day-02/configuration_of_cgi.md)
-  - [VPCフローログ](./day-02/vpc_flow_log.md)
 - [HTTP詳説](./day-02/http_request.md)
-- EC2インスタンスの運用
-  - [セッションマネージャによる接続](./day-02/connect_with_session_manager.md)
-  - [インスタンスのバックアップ](./day-02/backup_ec2_instance.md)
-  - [インスタンス自動停止](./day-02/auto_stop_ec2_instance.md)
-  - [固定IPの割り当て](./day-02/assign_elastic_ip.md)
+- サーバーの運用
+    - VPC
+		- [VPCログの可視化](./day-02/vpc_flow_log.md)
+    - EC2
+      - [セッションマネージャによる接続](./day-02/connect_with_session_manager.md)
+      - [インスタンスのバックアップ](./day-02/backup_ec2_instance.md)
+      - [インスタンス自動停止](./day-02/auto_stop_ec2_instance.md)
+      - [固定IPの割り当て](./day-02/assign_elastic_ip.md)
