@@ -12,6 +12,7 @@
     - [認証情報の設定（IAMユーザー）](./day-01/set_authentication_with_iamuser.md)
 
 ### day-01
+
 - [Intoduction](./day-01/README.md)
 - Hosting static web site on Amazon S3
   - [Amazon S3とは](./day-01/s3_introduction.md)
@@ -26,16 +27,17 @@
   - [参考資料](./day-01/s3_reference.md)
 
 ### day-02
+
 - [Introduction](./day-02/README.md)
 - Hosting dynamic web site on Amazon EC2
   - [VPCの構築](./day-02/build_vpc.md)
-      - VPCフローログ
   - [EC2インスタンスの作成](./day-02/create_ec2.md)
   - [HTTP Serverの構築](./day-02/build_http_server.md)
   - [動的コンテンツの公開](./day-02/configuration_of_cgi.md)
+  - [VPCフローログ](./day-02/vpc_flow_log.md)
+- [HTTP詳説](./day-02/http_request.md)
 - EC2インスタンスの運用
   - [セッションマネージャによる接続](./day-02/connect_with_session_manager.md)
   - [インスタンスのバックアップ](./day-02/backup_ec2_instance.md)
   - [インスタンス自動停止](./day-02/auto_stop_ec2_instance.md)
-  - [固定IPの割り当て](./day-02/assign_erastic_ip.md)
-- [HTTP詳説](./day-02/http_request.md)
+  - [固定IPの割り当て](./day-02/assign_elastic_ip.md)

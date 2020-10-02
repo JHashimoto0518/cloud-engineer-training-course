@@ -1,4 +1,5 @@
-# VPCフローログ
+# VPCフローログとは
+
 VPCフローログとは、VPCを送信元/送信先とするIPトラフィックをモニタリングし、ロギングする機能。
 
 [VPC フローログ - Amazon Virtual Private Cloud](https://docs.aws.amazon.com/ja_jp/vpc/latest/userguide/flow-logs.html)
