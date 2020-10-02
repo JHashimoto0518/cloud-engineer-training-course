@@ -1,19 +1,19 @@
 # Elastic IPとは
 
-EC2インスタンスを停止すると、インスタンスに付与されていたパブリックIPアドレスは解放される。そして、停止中のインスタンスを開始すると、停止前のパブリックIPアドレスとは異なるIPアドレスが付与される。
+EC2インスタンスを停止すると、インスタンスに付与されていたパブリックIPアドレスは解放される[^1]。そして、停止中のインスタンスを開始すると、停止前のパブリックIPアドレスとは異なるIPアドレスが付与される。
 
 これでは、停止するたびにIPアドレスの変更を周知しなければ、クライアントから接続できなくなってしまうので、都合が悪い。
 
 これを避けるため、インスタンスを多数のクライアントに利用させる場合は、固定IPを割り当てる。
 
-EC2インスタンスに固定IPを割り当てるには、Elastic IPを使う。Elastic IPはEC2の中の１機能である。
-
-TODO: インスタンスの再起動では変わらない
+EC2インスタンスに固定IPを割り当てるには、Elastic IPを使う。Elastic IPはEC2サービスの１機能である。
 
 ## 教科書
+
 - 3.5 Elastic IPを使った独自ドメインでのサイト運用
 
 ## 解放した固定IPの復旧
+
 解放した固定IPは、条件を満たしていれば再び取得できるが、すでに他ユーザーに割り当てられてしまった場合は取得できないので、あてにしないほうがよい。
 
 [Elastic IP アドレス - Amazon Elastic Compute Cloud](https://docs.aws.amazon.com/ja_jp/AWSEC2/latest/UserGuide/elastic-ip-addresses-eip.html#using-eip-recovering)
@@ -25,7 +25,7 @@ Elastic IPは、無料利用枠に**含まれない**。
 次のルールで課金される。金額は0.005USD/1h。
 
 - 稼働中のEC2インスタンスに関連付けられている
-    
+  
     - 無料
 - 稼働中のインスタンスに関連付けられていない
     - 課金される
@@ -42,50 +42,51 @@ Elastic IPは、無料利用枠に**含まれない**。
 
 # EC2インスタンスに固定IPを割り当てる
 
-TODO: CLIのログを手順に反映させる
+パブリックIPアドレスが変わるので、SSHで接続している場合は切断しておくこと。
 
-SSHで接続している場合は切断する。
-
-固定IPアドレスを払い出す。
+固定IPアドレスを払い出す。出力の[PublicIp]と[AllocationId]をこの後使用するので、控えておくこと。
 
 ```bash=
-[root@server ~]# aws ec2 allocate-address
+aws ec2 allocate-address
 {
     "PublicIp": "???.???.???.???",
-    ...
+    "AllocationId": "eipalloc-?????",
+    "PublicIpv4Pool": "amazon",
+    "NetworkBorderGroup": "ap-northeast-1",
+    "Domain": "vpc"
 }
 ```
 
 払い出された固定IPアドレスをインスタンスに関連付ける。
 
 ```bash=
-[root@server ~]# aws ec2 associate-address --instance-id i-xxx --public-ip ???.???.???.???
+aws ec2 associate-address --instance-id i-06c3998b0ed37bfba --public-ip ???.???.???.???
 {
-	"AssociationId": "eipassoc-0xxxxxxxxxxxxxxxx"
+    "AssociationId": "eipalloc-?????"
 }
 ```
 
-固定IPに名前を付ける。ここでは`cetc-web-server-ip`とする。
+固定IPに名前を付ける。ここでは`cetc-cli-server-ip`とする。
 
 ```bash
-[root@server ~]# aws ec2 create-tags --resources eipassoc-0xxxxxxxxxxxxxxxx --tags "Key=Name,Value=cetc-web-server-ip"
-[root@server ~]# aws ec2 describe-tags --filters "Name=resource-id,Values=${EC2_INS_2_ALLOCATE_ID}"
+$ aws ec2 create-tags --resources eipalloc-004dbe52a19eceab7 --tags "Key=Name,Value=cetc-cli-server-ip"
+[ec2-user@ip-172-31-39-145 ~]$ aws ec2 describe-tags --filters "Name=resource-id,Values=eipalloc-?????"
 {
     "Tags": [
         {
             "Key": "Name",
-            "ResourceId": "eipalloc-???",
+            "ResourceId": "eipalloc-?????",
             "ResourceType": "elastic-ip",
-            "Value": "cetc-web-server-ip"
+            "Value": "cetc-cli-server-ip"
         }
     ]
 }
 ```
 
-SSHで接続できることを確認する。
+マネジメントコンソールで[Elastic IP アドレス]が割り当てられていることが確認できる。[パブリック IPv4アドレス]と[パブリック IPv4 DNS]にもElastic IP アドレスが適用されている。
 
-```bash=
-[root@server ~]# ssh -i xxx.pem ec2-user@???.???.???.???
-```
+![image-20201003081126244](assign_elastic_ip/image-20201003081126244.png)
 
-インスタンスを停止→開始してパブリックIPアドレスが変わらないことを確認する。
+インスタンスを停止→開始して、パブリックIPアドレスが変わらないことを確認する。
+
+[^1]: 再起動したときは、ブリックIPアドレスは解放されないので、再起動後も同じIPアドレスが付与される。
