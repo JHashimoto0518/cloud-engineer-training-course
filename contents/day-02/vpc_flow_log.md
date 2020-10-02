@@ -30,12 +30,11 @@ AWSの仮想ネットワークインターフェースはElastic Network Interfa
 
 [AWSのネットワークインターフェース「ENI」とは｜コラム｜クラウドソリューション｜サービス｜法人のお客さま｜NTT東日本](https://business.ntt-east.co.jp/content/cloudsolution/column-14.html)
 
-[^1]: ネットワーク通信に必要なインターフェース。NIC（ネットワークインターフェースカード）とも呼ばれる。LANケーブルを指す箇所。
-
 ## Cloudwatch logsとは
 Cloudwatchは、システム監視のサービス。Cloudwatch logsは、Cloudwatchの１機能で、AWS各サービスのログをCloudwatch logsに集約して、分析、視覚化できる。
 
 ## VPCフローログを有効にする
+
 今回は、マネジメントコンソールから設定する。
 
 [【新機能】VPC Flow LogsでVPC内のIPトラフィックを監視することができるようになりました! | Developers.IO](https://dev.classmethod.jp/articles/introduce-to-vpc-flow-log/)
@@ -105,3 +104,5 @@ Cloudwatch logsは、ログ容量で従量課金されるので、VPCフロー�
 [フローログを使用する - Amazon Virtual Private Cloud](https://docs.aws.amazon.com/ja_jp/vpc/latest/userguide/working-with-flow-logs.html#delete-flow-log)
 
 VPCフローログを削除すると、Cloudwatch logsへのログ出力は停止されるが、蓄積されたログは削除されない。
+
+[^1]: ネットワーク通信に必要なインターフェース。NIC（ネットワークインターフェースカード）とも呼ばれる。LANケーブルを指す箇所。
