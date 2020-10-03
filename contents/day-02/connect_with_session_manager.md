@@ -33,15 +33,16 @@ AWS Systems Managerは、AWSリソースの運用に関する機能を提供す�
 sshでインスタンスに接続し、ssmエージェントを再起動する。
 
 ```bash
-$ sudo systemctl status amazon-ssm-agent.service
+$ sudo su -
+# systemctl status amazon-ssm-agent.service
 ● amazon-ssm-agent.service - amazon-ssm-agent
    Loaded: loaded (/usr/lib/systemd/system/amazon-ssm-agent.service; enabled; vendor preset: enabled)
    Active: active (running) since Mon 2020-09-28 23:26:11 UTC; 2s ago
  Main PID: 3496 (amazon-ssm-agen)
    CGroup: /system.slice/amazon-ssm-agent.service
            └─3496 /usr/bin/amazon-ssm-agent
-$ sudo systemctl stop amazon-ssm-agent.service    # systemctl reloadでは反映されない
-$ sudo systemctl start amazon-ssm-agent.service
+# sudo systemctl stop amazon-ssm-agent.service    # systemctl reloadでは反映されない
+# sudo systemctl start amazon-ssm-agent.service
 ```
 
 手動でssmエージェントを再起動する代わりに、マネジメントコンソールからインスタンスを停止→開始してもssmエージェントは再起動される。

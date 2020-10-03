@@ -56,6 +56,9 @@ SSHのデーモンを再起動する。
 ```
 
 # FAQ
+## SSH接続で`load pubkey "*.pem": invalid format`が出力される
+
+## 再現確認
 
 ```bash
 $ ssh -V
@@ -79,4 +82,8 @@ https://aws.amazon.com/amazon-linux-2/
 8 package(s) needed for security, out of 25 available
 Run "sudo yum update" to apply all updates.
 ```
+
+## 原因
+- [OpenSSH 8.3 client fails with: load pubkey invalid format - Hacker's ramblings](https://blog.hqcodeshop.fi/archives/482-OpenSSH-8.3-client-fails-with-load-pubkey-invalid-format.html)
+- [OpenSSH 8.3 client fails with: load pubkey invalid format - Part 2 - Hacker's ramblings](https://blog.hqcodeshop.fi/archives/487-OpenSSH-8.3-client-fails-with-load-pubkey-invalid-format-Part-2.html)
 

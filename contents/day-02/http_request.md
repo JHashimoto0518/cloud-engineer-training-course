@@ -55,13 +55,13 @@ Content-Type: text/html; charset=UTF-8  ←ヘッダここまで
 ### インストール
 
 ```bash
-ec2-user@ip-192-168-11-123 cgi-bin]$ sudo su -
+$ sudo su -
 Last login: Tue Sep 29 02:30:46 UTC 2020 on pts/0
-[root@ip-192-168-11-123 ~]# yum install telnet -y
+# yum install telnet -y
 Loaded plugins: extras_suggestions, langpacks, priorities, update-motd
 ...
 Complete!
-[root@ip-192-168-11-123 ~]#
+# exit
 ```
 
 ### GETリクエスト
@@ -69,7 +69,7 @@ Complete!
 コンテンツを取得するときに一般に使われる。データはURLに含める。
 
 ```bash
-[root@ip-192-168-11-123 cgi-bin]# telnet localhost 80
+# telnet localhost 80
 Trying 127.0.0.1...
 Connected to localhost.
 Escape character is '^]'.
@@ -100,7 +100,7 @@ Connection closed by foreign host.
 HTTP1.1でリクエストしてみる。
 
 ```bash
-root@ip-192-168-11-123 cgi-bin]# telnet localhost 80
+# telnet localhost 80
 Trying 127.0.0.1...
 Connected to localhost.
 Escape character is '^]'.
@@ -129,7 +129,7 @@ Connection closed by foreign host.
 `Host`を指定して再びリクエストする。
 
 ```bash
-[root@ip-192-168-11-123 cgi-bin]# telnet localhost 80
+# telnet localhost 80
 Trying 127.0.0.1...
 Connected to localhost.
 Escape character is '^]'.
@@ -166,9 +166,9 @@ Host属性が必要な理由は、1.1で名前ベースのバーチャルホス�
 
 > IP ベースのバーチャルホストでは、応答する バーチャルホストへのコネクションを決定するために IP アドレスを使用します。ですから、それぞれのホストに個々に IP アドレスが必要になります。これに対して名前ベースのバーチャルホストでは、 クライアントが HTTP ヘッダの一部としてホスト名を告げる、 ということに依存します。この技術で同一 IP アドレスを異なる多数のホストで共有しています。
 
-## リクエストされたデータをサーバーで取得する
+### 送信データをサーバーで取得する
 
-### CGI作成
+#### CGI作成
 
 ```bash
 $ sudo su -
@@ -226,10 +226,10 @@ echo "</body></html>"
 # chmod 755 read_data.cgi
 ```
 
-### GET
+#### GET
 
 ```bash
-ec2-user@ip-192-168-10-17 cgi-bin]$ telnet localhost 80
+# telnet localhost 80
 Trying 127.0.0.1...
 Connected to localhost.
 Escape character is '^]'.
@@ -251,12 +251,12 @@ Content-Type: text/html; charset=UTF-8
 Connection closed by foreign host.
 ```
 
-## POST
+#### POST
 
 POSTリクエストは、ヘッダの`Content-Length`属性が必須。GETと違って送信データに改行がないので、データ長がないとサーバー側で読みだせない。
 
 ```bash
-[root@ip-192-168-11-123 cgi-bin]# telnet localhost 80
+# telnet localhost 80
 Trying 127.0.0.1...
 Connected to localhost.
 Escape character is '^]'.
@@ -281,7 +281,9 @@ Content-Type: text/html; charset=UTF-8
 Connection closed by foreign host.
 ```
 
-### Apacheログ
+## Apacheログ
+
+Apacheのログを確認する。
 
 ```bash
 # cd /etc/httpd/logs/
