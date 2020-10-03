@@ -1,9 +1,8 @@
 # EC2インスタンスのバックアップ
 
-バックアップを取得する前にインスタンスを停止する必要があります。
+インスタンスのバックアップとしてAMIを取得する。AMIの取得を開始する前にインスタンスを停止する必要がある。
 
-TODO:
-AMIとは
+教科書: 3.3.2 EC2の基本用語
 
 | 属性       | 値                  |
 | ---------- | ------------------- |
@@ -78,6 +77,8 @@ Every 2.0s: aws ec2 describe-images --image-ids ami-08e87...  server.mgt.local: 
 ```
 
 ## インスタンスの開始
+
+必要であれば、インスタンスを開始する。
 
 ```bash
 [root@server ~]# aws ec2 start-instances --instance-ids i-???
