@@ -43,3 +43,9 @@
       - [インスタンス自動停止](./day-02/auto_stop_ec2_instance.md)
       - [固定IPの割り当て](./day-02/assign_elastic_ip.md)
       - インスタンスのバックアップ
+
+### day-03
+
+- [Authentication and Authorization with using IAM](./day-03/authentication_and_autholization.md)
+- IAMユーザーによる多要素認証 
+- Webサイトホスティングのバケットポリシー
