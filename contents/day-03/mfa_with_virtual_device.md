@@ -1,12 +1,16 @@
-# IAMユーザーによる多要素認証
+# 仮想MFAデバイスによる多要素認証
 
 AWSでは複数の多要素認証 (MFA) の手法をサポートしているが、今回は仮想MFAデバイスを使用する。
 
 ### 仮想MFAデバイスとは
 
+仮想MFAデバイスはワンタイムパスワード生成器として機能する。
+
 [AWS での多要素認証 (MFA) の使用 - AWS Identity and Access Management](https://docs.aws.amazon.com/ja_jp/IAM/latest/UserGuide/id_credentials_mfa.html)
 
 > 電話やその他のデバイスで動作し、物理デバイスをエミュレートするソフトウェアアプリケーション。このデバイスは、時間同期されるワンタイムパスワードアルゴリズムに基づいて 6 桁の数値コードを生成します。サインイン時に、ユーザーはデバイスから取得した有効なコードを 2 番目のウェブページに入力する必要があります。
+
+仮想MFAデバイスを使用した場合は、知識認証（パスワード）と所有認証（ワンタイムパスワード生成器）を組み合わせたMFAになる。
 
 ## ゴール
 
@@ -40,8 +44,6 @@ IAMユーザーのサインインプロセスに仮想MFAデバイスによる�
 1. 仮想MFAデバイスが割り当てられていれば成功。
     ![image-20201025110906020](mfa/image-20201025110906020.png)
 
-
-
 ## MFAによるサインイン
 
 ![image-20201029092928923](mfa/image-20201029092928923.png)
@@ -53,6 +55,8 @@ IAMユーザーのサインインプロセスに仮想MFAデバイスによる�
 Google Authenticatorに表示されたMFAコードを入力して、[送信]を実行する。アプリに表示されたMFAコードが切り替わる前に送信すること。
 
 ## 参考
+
+[AWS での多要素認証 (MFA) の使用 - AWS Identity and Access Management](https://docs.aws.amazon.com/ja_jp/IAM/latest/UserGuide/id_credentials_mfa.html)
 
 [IAM のサインインページでの MFA デバイスの使用 - AWS Identity and Access Management](https://docs.aws.amazon.com/ja_jp/IAM/latest/UserGuide/console_sign-in-mfa.html)
 
