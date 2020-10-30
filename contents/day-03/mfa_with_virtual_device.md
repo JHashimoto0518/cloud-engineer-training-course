@@ -52,6 +52,20 @@ IAMユーザーのサインインプロセスに仮想MFAデバイスによる�
 
 Google Authenticatorに表示されたMFAコードを入力して、[送信]を実行する。アプリに表示されたMFAコードが切り替わる前に送信すること。
 
+## 仮想MFAデバイスの無効化
+
+![image-20201031071507183](mfa_with_virtual_device/image-20201031071507183.png)
+
+
+
+![image-20201031071635158](mfa_with_virtual_device/image-20201031071635158.png)
+
+
+
+![image-20201031071738942](mfa_with_virtual_device/image-20201031071738942.png)
+
+割り当てが解除されていれば成功。
+
 ## 参考
 
 [AWS での多要素認証 (MFA) の使用 - AWS Identity and Access Management](https://docs.aws.amazon.com/ja_jp/IAM/latest/UserGuide/id_credentials_mfa.html)
