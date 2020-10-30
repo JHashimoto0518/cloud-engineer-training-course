@@ -1,10 +1,42 @@
 
 
-# IAMポリシーとは
+# IAMポリシー詳説
 
-{%slideshare AmazonWebServicesJapan/20190129-aws-black-belt-online-seminar-aws-identity-and-access-management-iam-part1 %}
+## 概要図
 
-{%slideshare AmazonWebServicesJapan/20190130-aws-black-belt-online-seminar-aws-identity-and-access-management-aws-iam-part2 %}
+![](what_is_iam_policy/iam_policy.png)
+
+３つの観点で分類している。
+
+- 適用する対象
+    - アイデンティティベース
+        - アイデンティティにアクセス許可を移譲する
+    - リソースベース
+        - リソースにアクセス許可を移譲する
+            - 例: S3のバケット
+- オブジェクト/設定値
+    - 管理ポリシー
+        - 単一のオブジェクトとして管理されるポリシー。
+        - 複数のアイデンティティで共用できる。
+    - インラインポリシー
+        - アイデンティティに対して埋め込まれる設定値。
+        - 複数のアイデンティティで共用できない。同一内容のポリシーであっても各アイデンティティ個別に設定する。
+        - インラインポリシーの利用は**非推奨**。
+- 管理主体
+    - AWS管理ポリシー
+        - AWSが作成および管理するポリシー。利用者がポリシーの設定を変更できない。
+    - カスタマー管理ポリシー
+        - AWSアカウントで作成および管理する。利用者がポリシーを柔軟に設定できる。
+
+
+
+## 管理ポリシーとカスタマー管理ポリシーの使い分け
+
+セキュリティのマニアックな話
+
+
+
+# ref
 
 
 
@@ -46,10 +78,6 @@ https://cdn-ak.f.st-hatena.com/images/fotolife/l/live-your-life-dd18/20191129/20
 
 ## 要素の説明
 [IAM JSON ポリシーリファレンス - AWS Identity and Access Management](https://docs.aws.amazon.com/ja_jp/IAM/latest/UserGuide/reference_policies.html)
-
-## 管理ポリシーとカスタマー管理ポリシーの使い分け
-
-
 
 ## 参考
 
