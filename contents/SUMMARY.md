@@ -46,6 +46,7 @@
 
 ### day-03
 
-- [Authentication and Authorization with using IAM](./day-03/authentication_and_autholization.md)
-- IAMユーザーによる多要素認証 
-- Webサイトホスティングのバケットポリシー
+- [Introduction](./day-03/basis_of_security.md)
+- Authentication and Authorization with IAM
+  - [IAMとは](./day-03/what_is_iam.md)
+  - [仮想MFAデバイスによる多要素認証](./day-03/mfa_with_virtual_device.md)
