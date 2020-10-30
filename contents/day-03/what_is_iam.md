@@ -64,6 +64,7 @@ Linuxの`su`コマンドをイメージするとわかりやすい。
 #### 例
 
 - 開発用アカウントのIAMユーザーに本番稼働用アカウントのアプリケーション更新許可を移譲する
+
     [所有している別の IAM アカウントへのアクセス権を AWS ユーザーに提供 - AWS Identity and Access Management](https://docs.aws.amazon.com/ja_jp/IAM/latest/UserGuide/id_roles_common-scenarios_aws-accounts.html)
 
 ### サービスに対してロールを適用するには
