@@ -4,9 +4,8 @@ AWS Identity and Access Management (IAM) は、AWSにおいて認証と認可の
 
 IAMの利用は無料。
 
-## 教科書
-
-6.2 IAMによるユーザーアカウント管理
+- 教科書
+    - 6.2 IAMによるユーザーアカウント管理
 
 ## IAM概要図
 
