@@ -5,7 +5,7 @@
 データの不整合を防ぐため、AMI取得を開始する前にインスタンスを停止する必要がある。
 
 - 教科書
-	- 3.3.2 EC2の基本用語
+    - 3.3.2 EC2の基本用語
 
 ## ゴール
 Cetc-Web-Serverのバックアップを取得する。
@@ -40,19 +40,19 @@ aws ec2 stop-instances \
 
 ```bash
 {
-	"StoppingInstances": [
-		{
-			"CurrentState": {
-				"Code": 64,
-				"Name": "stopping"
-			},
-			"InstanceId": "i-???",
-			"PreviousState": {
-				"Code": 16,
-				"Name": "running"
-			}
-		}
-	]
+    "StoppingInstances": [
+        {
+            "CurrentState": {
+                "Code": 64,
+                "Name": "stopping"
+            },
+            "InstanceId": "i-???",
+            "PreviousState": {
+                "Code": 16,
+                "Name": "running"
+            }
+        }
+    ]
 }
 ```
 
@@ -70,17 +70,17 @@ watch -d aws ec2 describe-instances \
 Every 2.0s: aws ec2 describe-instances --instance-ids i-0...  server.mgt.local: Sun Jun 21 17:58:33 2020
 
 [
-	[
-		"stopping"
-	]
+    [
+        "stopping"
+    ]
 ]
 ...
 Every 2.0s: aws ec2 describe-instances --instance-ids i-0...  server.mgt.local: Sun Jun 21 17:58:55 2020
 
 [
-	[
-		"stopped"
-	]
+    [
+        "stopped"
+    ]
 ]
 ```
 ## インスタンスのバックアップ
@@ -153,19 +153,19 @@ aws ec2 start-instances \
 **出力**
 ```bash
 {
-	"StartingInstances": [
-		{
-			"CurrentState": {
-				"Code": 0,
-				"Name": "pending"
-			},
-			"InstanceId": "i-???",
-			"PreviousState": {
-				"Code": 80,
-				"Name": "stopped"
-			}
-		}
-	]
+    "StartingInstances": [
+        {
+            "CurrentState": {
+                "Code": 0,
+                "Name": "pending"
+            },
+            "InstanceId": "i-???",
+            "PreviousState": {
+                "Code": 80,
+                "Name": "stopped"
+            }
+        }
+    ]
 }
 ```
 
@@ -185,16 +185,16 @@ aws ec2 describe-instances \
 Every 2.0s: aws ec2 describe-instances --instance-ids i-xxx --query 'Reserv... Sun Jun 21 17:59:31 2020
 
 [
-	[
-		"pending"
-	]
+    [
+        "pending"
+    ]
 ]
 ...
 Every 2.0s: aws ec2 describe-instances --instance-ids i-xxx --query 'Reserv... Sun Jun 21 17:59:36 2020
 
 [
-	[
-		"running"
-	]
+    [
+        "running"
+    ]
 ]
 ```
