@@ -20,11 +20,11 @@ Cetc-Web-Serverのバックアップを取得する。
 
 **実行コマンド**
 ```bash
-$ export WEB_EC2_INSTANCE_ID=`aws ec2 describe-instances \
+export WEB_EC2_INSTANCE_ID=`aws ec2 describe-instances \
 --filters Name=tag:Name,Values="cetc-web-server" \
 --query 'Reservations[].Instances[].InstanceId' \
 --output text`
-$ echo $WEB_EC2_INSTANCE_ID
+echo $WEB_EC2_INSTANCE_ID
 ```
 ## インスタンスの停止
 
@@ -33,7 +33,7 @@ $ echo $WEB_EC2_INSTANCE_ID
 **実行コマンド**
 
 ```bash
-$ aws ec2 stop-instances \
+aws ec2 stop-instances \
 --instance-ids $WEB_EC2_INSTANCE_ID
 ```
 **出力**
@@ -58,12 +58,14 @@ $ aws ec2 stop-instances \
 
 **実行コマンド**
 ```bash
-$ watch -d \
-aws ec2 describe-instances \
+watch -d aws ec2 describe-instances \
 --instance-ids $WEB_EC2_INSTANCE_ID \
 --query 'Reservations[].Instances[].[State][].[Name]'
 ```
 **出力**
+
+`stopped`になるまで待つ。
+
 ```bash
 Every 2.0s: aws ec2 describe-instances --instance-ids i-0...  server.mgt.local: Sun Jun 21 17:58:33 2020
 
@@ -90,7 +92,7 @@ Every 2.0s: aws ec2 describe-instances --instance-ids i-0...  server.mgt.local: 
 
 **実行コマンド**
 ```bash
-$ aws ec2 create-image \
+aws ec2 create-image \
 --instance-id $WEB_EC2_INSTANCE_ID \
 --name "cetc-web-server-ami_`date '+%Y%m%d'`"
 ```
@@ -101,15 +103,17 @@ $ aws ec2 create-image \
 }
 ```
 
-`available`になれば、バックアップは完了している
-
 **実行コマンド**
+
 ```bash
-$ watch -d aws ec2 describe-images \
+watch -d aws ec2 describe-images \
 --filters Name=name,Values="cetc-web-server-ami_`date '+%Y%m%d'`" \
 --query 'Images[].[State]'
 ```
 **出力**
+
+`available`になれば、バックアップは完了している。
+
 ```bash
 Every 2.0s: aws ec2 describe-images --filters Name=name,Values="cetc-web-server-ami_20201... Sun Jun 21 18:09:54 2020
 
@@ -134,7 +138,7 @@ Every 2.0s: aws ec2 describe-images --filters Name=name,Values="cetc-web-server-
 
 **実行コマンド**
 ```bash
-$ aws ec2 start-instances \
+aws ec2 start-instances \
 --instance-ids $WEB_EC2_INSTANCE_ID
 ```
 
@@ -159,13 +163,16 @@ $ aws ec2 start-instances \
 
 **実行コマンド**
 ```bash
-$ watch -d \
+watch -d \
 aws ec2 describe-instances \
 --instance-ids $WEB_EC2_INSTANCE_ID \
 --query 'Reservations[].Instances[].[State][].[Name]'
 ```
 
 **出力**
+
+`running`になれば、開始されている。
+
 ```bash
 Every 2.0s: aws ec2 describe-instances --instance-ids i-xxx --query 'Reserv... Sun Jun 21 17:59:31 2020
 
