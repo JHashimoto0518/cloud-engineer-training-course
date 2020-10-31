@@ -19,6 +19,7 @@ Cetc-Web-Serverのバックアップを取得する。
 インスタンスIDを環境変数に設定する
 
 **実行コマンド**
+
 ```bash
 export WEB_EC2_INSTANCE_ID=`aws ec2 describe-instances \
 --filters Name=tag:Name,Values="cetc-web-server" \
@@ -136,7 +137,11 @@ EC2コンソールから作成されたAMIを確認できる。
 
 ![image-20201031130312036](backup_ec2_instance/image-20201031130312036.png)
 
-AMIに関連付けられたスナップショットも作成される。[説明]にAMI IDが埋め込まれている。
+AMIに関連付けられたスナップショットも作成される。
+
+- AMI = スナップショット + 管理情報
+
+[説明]に埋め込まれたAMI IDで関連付けられたスナップショットがわかる。
 
 ![image-20201031130433584](backup_ec2_instance/image-20201031130433584.png)
 
@@ -145,6 +150,7 @@ AMIに関連付けられたスナップショットも作成される。[説明]
 必要であれば、インスタンスを開始する。
 
 **実行コマンド**
+
 ```bash
 aws ec2 start-instances \
 --instance-ids $WEB_EC2_INSTANCE_ID
