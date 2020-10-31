@@ -11,11 +11,12 @@
 
 ## ステップ
 
-1. IAMユーザーにAmazonEC2FullAccessPolicyを適用する
+1. AmazonEC2FullAccessPolicyをIAMユーザーにアタッチする
 2. Webサーバー用インスタンスの停止/開始を拒否するカスタマー管理ポリシーを作成する
-3. IAMユーザーに作成したカスタマー管理ポリシーを適用する
+3. 作成したカスタマー管理ポリシーをIAMユーザーにアタッチする
 
-## AmazonEC2FullAccessPolicyをユーザーに適用する
+## AmazonEC2FullAccessPolicyをユーザーにアタッチする
+アタッチ済みの場合は不要。
 
 ## カスタマー管理ポリシーを作成する
 
@@ -25,11 +26,11 @@
 
 | 属性       | 値                                 | 説明 |
 | ---------- | ---------------------------------- | ---- |
-| リソース名 | DenyStopOrStartCetcWebServerPolicy |      |
+| ポリシー名 | DenyStopOrStartCetcWebServerPolicy |      |
 | サービス           | EC2                                   |      |
 | 許可/拒否 | 拒否  |   |
 | アクション           | StopInstances/StartInstances | インスタンスの停止/開始 |
-| リソース      | i-xxx | Cetc-Web-ServerのARN |
+| リソース | Cetc-Web-ServerのARN | EC2コンソールで確認 |
 
 以降の作業は、IAMコンソールから行う。
 
@@ -61,9 +62,14 @@
 
 ![image-20201031090527524](how_to_use_visual_editor/image-20201031090527524.png)
 
-### カスタマー管理ポリシーをユーザーに適用する
+## カスタマー管理ポリシーをユーザーにアタッチする
 
 ## 動作確認
 
 1. Cetc-Web-Serverの停止/開始ができないこと
-2. Cetc-Cli-Serverの停止/開始ができること
+1. Cetc-Cli-Serverの停止/開始ができること
+
+## 後処理
+1. AmazonEC2FullAccessPolicyをアタッチした場合は、ユーザーからデタッチする
+1. DenyStopOrStartCetcWebServerPolicyをユーザーからデタッチする
+1. 不要であれば、DenyStopOrStartCetcWebServerPolicyを削除する
