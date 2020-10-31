@@ -132,6 +132,14 @@ Every 2.0s: aws ec2 describe-images --filters Name=name,Values="cetc-web-server-
 ]
 ```
 
+EC2コンソールから作成されたAMIを確認できる。
+
+![image-20201031130312036](backup_ec2_instance/image-20201031130312036.png)
+
+AMIに関連付けられたスナップショットも作成される。[説明]にAMI IDが埋め込まれている。
+
+![image-20201031130433584](backup_ec2_instance/image-20201031130433584.png)
+
 ## インスタンスの開始
 
 必要であれば、インスタンスを開始する。
