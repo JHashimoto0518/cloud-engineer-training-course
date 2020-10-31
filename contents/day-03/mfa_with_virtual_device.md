@@ -23,15 +23,15 @@ IAMユーザーのサインインプロセスに仮想MFAデバイスによる�
 
 ## 仮想MFAデバイスの有効化
 
-![image-20201025104101732](mfa/image-20201025104101732.png)
+![image-20201025104101732](mfa_with_virtual_device/image-20201025104101732.png)
 
-![image-20201025104500813](mfa/image-20201025104500813.png)
+![image-20201025104500813](mfa_with_virtual_device/image-20201025104500813.png)
 
-![image-20201025104540024](mfa/image-20201025104540024.png)
+![image-20201025104540024](mfa_with_virtual_device/image-20201025104540024.png)
 
-![image-20201025104632983](mfa/image-20201025104632983.png)
+![image-20201025104632983](mfa_with_virtual_device/image-20201025104632983.png)
 
-![image-20201025105515007](mfa/image-20201025105515007.png)
+![image-20201025105515007](mfa_with_virtual_device/image-20201025105515007.png)
 
 1. アプリケーションをデバイスにインストールする。今回はGoogle Autheticatorを使用する。
 1. Google Autheticatorを起動し、QRコードを読み取る。
@@ -40,15 +40,15 @@ IAMユーザーのサインインプロセスに仮想MFAデバイスによる�
     アプリに表示されているMFAコードは、一定時間経過すると切り替わる。
     [AWSでMFA(二段階認証)を有効にする方法を超丁寧に説明するよ - Qiita](https://qiita.com/viptakechan/items/6d19aee635b2ab189e47)
 1. 仮想MFAデバイスが割り当てられていれば成功。
-    ![image-20201025110906020](mfa/image-20201025110906020.png)
+    ![image-20201025110906020](mfa_with_virtual_device/image-20201025110906020.png)
 
 ## MFAによるサインイン
 
-![image-20201029092928923](mfa/image-20201029092928923.png)
+![image-20201029092928923](mfa_with_virtual_device/image-20201029092928923.png)
 
 認証に必要な情報を入力して[サインイン]を実行する。
 
-![image-20201029093223571](mfa/image-20201029093223571.png)
+![image-20201029093223571](mfa_with_virtual_device/image-20201029093223571.png)
 
 Google Authenticatorに表示されたMFAコードを入力して、[送信]を実行する。アプリに表示されたMFAコードが切り替わる前に送信すること。
 
@@ -72,7 +72,7 @@ Google Authenticatorに表示されたMFAコードを入力して、[送信]を�
 
 [IAM のサインインページでの MFA デバイスの使用 - AWS Identity and Access Management](https://docs.aws.amazon.com/ja_jp/IAM/latest/UserGuide/console_sign-in-mfa.html)
 
-[IAM - Multi-factor Authentication](https://aws.amazon.com/jp/iam/features/mfa/?audit=2019q1) 
+[IAM - Multi-factor Authentication](https://aws.amazon.com/jp/iam/features/mfa_with_virtual_device/?audit=2019q1) 
 
 Google Authenticator以外に、次のアプリケーションがMFAに使用できる。
 
