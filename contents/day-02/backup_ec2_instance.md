@@ -1,17 +1,44 @@
 # EC2インスタンスのバックアップ
 
-インスタンスのバックアップとしてAMIを取得する。AMIの取得を開始する前にインスタンスを停止する必要がある。
+インスタンスのバックアップを取得したい場合は、インスタンスからAMIを取得する。
 
-教科書: 3.3.2 EC2の基本用語
+データの不整合を防ぐため、AMI取得を開始する前にインスタンスを停止する必要がある。
 
-| 属性       | 値                  |
-| ---------- | ------------------- |
-| イメージ名 | cetc-cli-server-ami |
+- 教科書
+	- 3.3.2 EC2の基本用語
 
+## ゴール
+Cetc-Web-Serverのバックアップを取得する。
+
+## ステップ
+1. インスタンスを停止する
+2. インスタンスのAMIを取得する
+
+## 環境変数の設定
+
+インスタンスIDを環境変数に設定する
+
+**実行コマンド**
+```bash
+$ export WEB_EC2_INSTANCE_ID=`aws ec2 describe-instances \
+--filters Name=tag:Name,Values="cetc-web-server" \
+--query 'Reservations[].Instances[].InstanceId' \
+--output text`
+$ echo $WEB_EC2_INSTANCE_ID
+```
 ## インスタンスの停止
 
+インスタンスを停止する。
+
+**実行コマンド**
+
 ```bash
-[root@server ~]# aws ec2 stop-instances --instance-ids i-???        
+$ aws ec2 stop-instances \
+--instance-ids $WEB_EC2_INSTANCE_ID
+```
+**出力**
+
+```bash
 {
 	"StoppingInstances": [
 		{
@@ -26,8 +53,18 @@
 			}
 		}
 	]
-}        
-[root@server ~]# watch -d aws ec2 describe-instances --instance-ids i-??? --query 'Reservations[].Instances[].[State][].[Name]'
+}
+```
+
+**実行コマンド**
+```bash
+$ watch -d \
+aws ec2 describe-instances \
+--instance-ids $WEB_EC2_INSTANCE_ID \
+--query 'Reservations[].Instances[].[State][].[Name]'
+```
+**出力**
+```bash
 Every 2.0s: aws ec2 describe-instances --instance-ids i-0...  server.mgt.local: Sun Jun 21 17:58:33 2020
 
 [
@@ -45,21 +82,36 @@ Every 2.0s: aws ec2 describe-instances --instance-ids i-0...  server.mgt.local: 
 ]
 ```
 ## インスタンスのバックアップ
-バックアップを取得する。
+インスタンスからAMIを取得する。
 
-TODO: name
+| 属性       | 値                  |
+| ---------- | ------------------- |
+| リソース名 | cetc-web-server-ami_日付 |
 
+**実行コマンド**
 ```bash
-[root@server ~]# aws ec2 create-image --instance-id i-??? --name "{"
+$ aws ec2 create-image \
+--instance-id $WEB_EC2_INSTANCE_ID \
+--name "cetc-web-server-ami_`date '+%Y%m%d'`"
+```
+**出力**
+```bash
 {
     "ImageId": "ami-???"
 }
 ```
 
-1. `available`になれば、バックアップは完了している
+`available`になれば、バックアップは完了している
+
+**実行コマンド**
 ```bash
-[root@server ~]# watch -d aws ec2 describe-images --image-ids ami-??? --query 'Images[].[State]'    
-Every 2.0s: aws ec2 describe-images --image-ids ami-08e87...  server.mgt.local: Sun Jun 21 18:09:19 2020
+$ watch -d aws ec2 describe-images \
+--filters Name=name,Values="cetc-web-server-ami_`date '+%Y%m%d'`" \
+--query 'Images[].[State]'
+```
+**出力**
+```bash
+Every 2.0s: aws ec2 describe-images --filters Name=name,Values="cetc-web-server-ami_20201... Sun Jun 21 18:09:54 2020
 
 [
     [
@@ -67,7 +119,7 @@ Every 2.0s: aws ec2 describe-images --image-ids ami-08e87...  server.mgt.local: 
     ]
 ]
 ...
-Every 2.0s: aws ec2 describe-images --image-ids ami-08e87...  server.mgt.local: Sun Jun 21 18:09:54 2020
+Every 2.0s: aws ec2 describe-images --filters Name=name,Values="cetc-web-server-ami_20201... Sun Jun 21 18:09:59 2020
 
 [
     [
@@ -80,8 +132,14 @@ Every 2.0s: aws ec2 describe-images --image-ids ami-08e87...  server.mgt.local: 
 
 必要であれば、インスタンスを開始する。
 
+**実行コマンド**
 ```bash
-[root@server ~]# aws ec2 start-instances --instance-ids i-???
+$ aws ec2 start-instances \
+--instance-ids $WEB_EC2_INSTANCE_ID
+```
+
+**出力**
+```bash
 {
 	"StartingInstances": [
 		{
@@ -97,9 +155,19 @@ Every 2.0s: aws ec2 describe-images --image-ids ami-08e87...  server.mgt.local: 
 		}
 	]
 }
-[root@server ~]# watch -d aws ec2 describe-instances --instance-ids i-??? --query 'Reservations[].Instances[].[State][].[Name]'
+```
 
-Every 2.0s: aws ec2 describe-instances --instance-ids i-0...  server.mgt.local: Sun Jun 21 17:59:31 2020
+**実行コマンド**
+```bash
+$ watch -d \
+aws ec2 describe-instances \
+--instance-ids $WEB_EC2_INSTANCE_ID \
+--query 'Reservations[].Instances[].[State][].[Name]'
+```
+
+**出力**
+```bash
+Every 2.0s: aws ec2 describe-instances --instance-ids i-xxx --query 'Reserv... Sun Jun 21 17:59:31 2020
 
 [
 	[
@@ -107,7 +175,7 @@ Every 2.0s: aws ec2 describe-instances --instance-ids i-0...  server.mgt.local: 
 	]
 ]
 ...
-Every 2.0s: aws ec2 describe-instances --instance-ids i-0...  server.mgt.local: Sun Jun 21 18:00:05 2020
+Every 2.0s: aws ec2 describe-instances --instance-ids i-xxx --query 'Reserv... Sun Jun 21 17:59:36 2020
 
 [
 	[
@@ -115,10 +183,3 @@ Every 2.0s: aws ec2 describe-instances --instance-ids i-0...  server.mgt.local: 
 	]
 ]
 ```
-
-TODO: 
-[特定の AWS アカウントと AMI を共有する - Amazon Elastic Compute Cloud/](https://docs.aws.amazon.com/ja_jp/AWSEC2/latest/UserGuide/sharingamis-explicit.html)
-
-アカウント時の注意点
-
-アカウントを閉鎖するとEBSを参照できないので、インスタンスを作成できない。

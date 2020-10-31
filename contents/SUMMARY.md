@@ -42,11 +42,13 @@
       - [セッションマネージャによる接続](./day-02/connect_with_session_manager.md)
       - [インスタンス自動停止](./day-02/auto_stop_ec2_instance.md)
       - [固定IPの割り当て](./day-02/assign_elastic_ip.md)
-      - インスタンスのバックアップ
+      - [インスタンスのバックアップ](./day-02/backup_ec2_instance.md)
 
 ### day-03
 
 - [Introduction](./day-03/basis_of_security.md)
 - Authentication and Authorization with IAM
   - [IAMとは](./day-03/what_is_iam.md)
+- Hands-on
   - [仮想MFAデバイスによる多要素認証](./day-03/mfa_with_virtual_device.md)
+  - [ビジュアルエディタによるポリシーの作成](./day-03/how_to_use_visual_editor.md)
