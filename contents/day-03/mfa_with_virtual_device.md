@@ -39,9 +39,9 @@ IAMユーザーのサインインプロセスに仮想MFAデバイスによる�
 1. 連続する２つのMFAコード（各6桁）を入力し、[MFAの割り当て]を実行する。
     アプリに表示されているMFAコードは、一定時間経過すると切り替わる。
     [AWSでMFA(二段階認証)を有効にする方法を超丁寧に説明するよ - Qiita](https://qiita.com/viptakechan/items/6d19aee635b2ab189e47)
-1. 
-1. ![](mfa_with_virtual_device/mfa_completed.png)
-1. 仮想MFAデバイスが割り当てられていれば成功。
+1. 割り当て成功のメッセージが表示される。
+    !![](mfa_with_virtual_device/mfa_completed.png)
+1. 仮想MFAデバイスが割り当てられていることを確認する。
     ![image-20201025110906020](mfa_with_virtual_device/image-20201025110906020.png)
 
 ## MFAによるサインイン
@@ -73,10 +73,10 @@ Google Authenticatorに表示されたMFAコードを入力して、[送信]を�
 ### 仮想MFAデバイスを紛失した場合はどうすればいいですか？
 
 - IAMユーザー
-    - 管理者に依頼して、無効化してもらう
+    - 管理者に依頼して、無効化してもらう。
 - ルートアカウント
-    - アカウントに登録されているEメールと電話を使用してサインインできる
-    - Eメールや電話にアクセスできなくなった場合は、AWSサポートに連絡する必要がある
+    - 認証の代替方法がある。アカウントに登録されているEメールと電話を使用してサインインできる。
+    - Eメールや電話にもアクセスできなくなった場合は、AWSサポートに連絡する必要がある。
 
 [MFA デバイスの紛失および故障時の対応 - AWS Identity and Access Management](https://docs.aws.amazon.com/ja_jp/IAM/latest/UserGuide/id_credentials_mfa_lost-or-broken.html)
 
