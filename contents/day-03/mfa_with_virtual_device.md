@@ -66,6 +66,18 @@ Google Authenticatorに表示されたMFAコードを入力して、[送信]を�
 
 割り当てが解除されていれば成功。
 
+## FAQ
+
+### 仮想MFAデバイスを紛失した場合はどうすればいいですか？
+
+- IAMユーザー
+    - 管理者に依頼して、無効化してもらう
+- ルートアカウント
+    - アカウントに登録されているEメールと電話を使用してサインインできる
+    - Eメールや電話にアクセスできなくなった場合は、AWSサポートに連絡する必要がある
+
+[MFA デバイスの紛失および故障時の対応 - AWS Identity and Access Management](https://docs.aws.amazon.com/ja_jp/IAM/latest/UserGuide/id_credentials_mfa_lost-or-broken.html)
+
 ## 参考
 
 [AWS での多要素認証 (MFA) の使用 - AWS Identity and Access Management](https://docs.aws.amazon.com/ja_jp/IAM/latest/UserGuide/id_credentials_mfa.html)
