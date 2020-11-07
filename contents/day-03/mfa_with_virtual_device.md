@@ -39,6 +39,8 @@ IAMユーザーのサインインプロセスに仮想MFAデバイスによる�
 1. 連続する２つのMFAコード（各6桁）を入力し、[MFAの割り当て]を実行する。
     アプリに表示されているMFAコードは、一定時間経過すると切り替わる。
     [AWSでMFA(二段階認証)を有効にする方法を超丁寧に説明するよ - Qiita](https://qiita.com/viptakechan/items/6d19aee635b2ab189e47)
+1. 
+1. ![](mfa_with_virtual_device/mfa_completed.png)
 1. 仮想MFAデバイスが割り当てられていれば成功。
     ![image-20201025110906020](mfa_with_virtual_device/image-20201025110906020.png)
 
