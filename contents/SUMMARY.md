@@ -49,6 +49,15 @@
 - [Introduction](./day-03/basis_of_security.md)
 - Authentication and Authorization with IAM
   - [IAMとは](./day-03/what_is_iam.md)
-- Hands-on
+- Hands-On
   - [仮想MFAデバイスによる多要素認証](./day-03/mfa_with_virtual_device.md)
   - [ビジュアルエディタによるポリシーの作成](./day-03/how_to_use_visual_editor.md)
+
+### day-04
+- [Introduction](./day-04/README.md)
+- Hosting web site at production with Route 53, CloudFront, and Certificate Manager
+  - [CloudFrontとは](./day-04/what_is_cloudfront.md)
+  - [Route 53とは](./day-04/what_is_route53.md)
+  - [Certificate Managerとは](./day-04/what_is_certificate_manager.md)
+- Hands-On
+  - [AWS Hands-on for Beginners - Static Website Hosting | AWS](https://pages.awscloud.com/JAPAN-event-OE-Hands-on-for-Beginners-StaticWebsiteHosting-2020-reg-event-LP.html)
