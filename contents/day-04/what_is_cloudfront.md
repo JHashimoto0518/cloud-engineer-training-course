@@ -1,4 +1,4 @@
-# CloudFrontとは
+# Amazon CloudFrontとは
 ## CDNとは
 - TODO: グローバルなエッジコンピュータの図
 
