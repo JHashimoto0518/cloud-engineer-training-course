@@ -56,8 +56,8 @@
 ### day-04
 - [Introduction](./day-04/README.md)
 - Hosting web site at production with Route 53, CloudFront, and Certificate Manager
-  - [CloudFrontとは](./day-04/what_is_cloudfront.md)
-  - [Route 53とは](./day-04/what_is_route53.md)
   - [Certificate Managerとは](./day-04/what_is_certificate_manager.md)
+  - CloudFrontとは
+  - Route 53とは
 - Hands-On
   - [AWS Hands-on for Beginners - Static Website Hosting | AWS](https://pages.awscloud.com/JAPAN-event-OE-Hands-on-for-Beginners-StaticWebsiteHosting-2020-reg-event-LP.html)
