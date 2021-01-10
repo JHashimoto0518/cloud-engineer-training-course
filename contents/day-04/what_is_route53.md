@@ -17,17 +17,54 @@
 
 # 実習
 - [ ] サーバー構築手順書から（正引きと逆引き）
-    - [ ] cloudshellかcli serverどちらを使うか？
     - [ ] 6-1 (1147行目)
-        - [ ] dig
         - [ ] wireshark
         - [ ] nslookup (1476行目)
-        - [ ] host (1511)
-- [ ] DNSクエリログ 
+
+CCNA教科書のDNSページ
 
 ## 名前解決を試す
-- nslookup
-- dig
+
+wiresharkインストール
+
+digインストール
+```bash
+sudo -s
+yum install -y bind-utils
+```
+
+TODO: wireshark
+
+正引き
+```bash
+nslookup
+dig www.yahoo.co.jp         		
+dig www.yahoo.co.jp ns　		
+dig www.yahoo.co.jp mx　		
+dig @8.8.8.8 www.yahoo.co.jp
+```
+逆引き
+```bash
+dig -x 10.0.0.2
+```
+
+## DNSクエリログ 
+有効化
+[Route53 でクエリログが取得できるようになりました \| Developers\.IO](https://dev.classmethod.jp/articles/query-log-from-route53/#toc-3)
+
+cloudwatch logsでバージニアリージョンを選択
+
+TODO: ログ項目
+
+```
+1.0 2021-01-10T05:47:26Z Z0855848ZMRIQ3P4AX3P jhashimoto0518.net NS NOERROR UDP ICN54-C1 18.181.238.75 -
+```
+
+> リクエストされたドメイン・サブドメイン
+> リクエスト時刻
+> レコードタイプ (A, AAAA など)
+> ゾーンIDとエッジロケーションID
+> DNSのレスポンスコード（ NOERROR や SERVFAIL など）
 
 # Advanced
 
