@@ -54,18 +54,11 @@ dig -x 10.0.0.2
 
 cloudwatch logsでバージニアリージョンを選択
 
-TODO: ログ項目
+[パブリック DNS クエリログ記録 \- Amazon Route 53](https://docs.aws.amazon.com/ja_jp/Route53/latest/DeveloperGuide/query-logs.html)
 
 ```
 1.0 2021-01-10T05:47:26Z Z0855848ZMRIQ3P4AX3P jhashimoto0518.net NS NOERROR UDP ICN54-C1 18.181.238.75 -
 ```
-
-> リクエストされたドメイン・サブドメイン
-> リクエスト時刻
-> レコードタイプ (A, AAAA など)
-> ゾーンIDとエッジロケーションID
-> DNSのレスポンスコード（ NOERROR や SERVFAIL など）
-
 # Advanced
 
 - マルチリージョンの冗長化に使用
