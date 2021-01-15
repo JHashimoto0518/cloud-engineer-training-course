@@ -1,37 +1,19 @@
-# TODO
--  **AWS のネットワークで知っておくべき10のこと**
-
 # Amazon Route 53とは
 ドメインネームシステム (DNS) のマネージドサービス。
 
-[Amazon Route 53（スケーラブルなドメインネームシステム \(DNS\)）\| AWS](https://aws.amazon.com/jp/route53/
+# DNSの仕組み
 
+- [DNSサーバとは](https://manual.iij.jp/dns/help/1480649.html)
 
+- ゾーン定義ファイル
 
-# DNSとは
-- [ ] 新人研修資料
-- [ ] **オライリー書籍**
-## DNSのしくみ
+# ハンズオン
 
-## ゾーン定義
-
-# 実習
-[AWS CloudShell – AWS リソースへのコマンドラインアクセス | Amazon Web Services ブログ](https://aws.amazon.com/jp/blogs/news/aws-cloudshell-command-line-access-to-aws-resources/)
-
-
-```bash
-yum -y bind-utils
-```
-- [ ] サーバー構築手順書から（正引きと逆引き）
-    - [ ] 6-1 (1147行目)
-        - [ ] wireshark
-        - [ ] nslookup (1476行目)
-
-CCNA教科書のDNSページ
 
 ## 名前解決を試す
 
-wiresharkインストール
+CloudShellログイン
+- AWSCloudShellFullAccess ポリシーを有効にする
 
 digインストール
 ```bash
@@ -39,11 +21,9 @@ sudo -s
 yum install -y bind-utils
 ```
 
-TODO: wireshark
-
 正引き
+
 ```bash
-nslookup
 dig www.yahoo.co.jp         		
 dig www.yahoo.co.jp ns　		
 dig www.yahoo.co.jp mx　		
@@ -54,25 +34,22 @@ dig @8.8.8.8 www.yahoo.co.jp
 dig -x 10.0.0.2
 ```
 
-## DNSクエリログ 
-有効化
-[Route53 でクエリログが取得できるようになりました \| Developers\.IO](https://dev.classmethod.jp/articles/query-log-from-route53/#toc-3)
+## DNSパケットのキャプチャ
 
-cloudwatch logsでバージニアリージョンを選択
+- wiresharkインストール
+- nslookup
 
-[パブリック DNS クエリログ記録 \- Amazon Route 53](https://docs.aws.amazon.com/ja_jp/Route53/latest/DeveloperGuide/query-logs.html)
+# 応用的な使い方
 
-```
-1.0 2021-01-10T05:47:26Z Z0855848ZMRIQ3P4AX3P jhashimoto0518.net NS NOERROR UDP ICN54-C1 18.181.238.75 -
-```
-# Advanced
+- マルチAZの冗長化
+  - [クラウド時代の可用性向上―サービスレベルに応じた具体策とは？ | Think IT（シンクイット）](https://thinkit.co.jp/story/2014/09/26/5126?page=0%2C1)
+- マルチリージョンの冗長化
+  - [AWSでリージョン間の自動DR構成を構築してみた #vgadvent2013 - s_tajima:TechBlog](http://s-tajima.hateblo.jp/entry/2013/12/02/100108)
+  - ヘルスチェック
 
-- マルチリージョンの冗長化に使用
-  - DNSフェイルオーバー
-  - ルーティング
-- 様々なルーティングタイプ
+# 参考
 
-# 参考資料
-
-[10 のことシリーズ - AWS のネットワークで知っておくべき10のこと | AWS Webinar](https://pages.awscloud.com/JAPAN-event-OE-At-least-10-Network-2020-reg-event-LP.html?trk=aws_event_page)
+- [Amazon Route 53（スケーラブルなドメインネームシステム \(DNS\)）\| AWS](https://aws.amazon.com/jp/route53/)
+- [Route53 でクエリログが取得できるようになりました \| Developers\.IO](https://dev.classmethod.jp/articles/query-log-from-route53/#toc-3)
+- [AWS CloudShell – AWS リソースへのコマンドラインアクセス | Amazon Web Services ブログ](https://aws.amazon.com/jp/blogs/news/aws-cloudshell-command-line-access-to-aws-resources/)
 
