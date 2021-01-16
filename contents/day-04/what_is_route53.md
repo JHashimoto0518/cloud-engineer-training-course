@@ -37,6 +37,7 @@ dig -x 10.0.0.2
 ## DNSパケットのキャプチャ
 
 - wiresharkインストール
+- [OSI参照モデル - ネットワーク入門サイト](https://beginners-network.com/supplement/osi_model.html)
 - nslookup
 
 # 応用的な使い方
