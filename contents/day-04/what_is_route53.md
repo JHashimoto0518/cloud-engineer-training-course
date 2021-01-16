@@ -3,9 +3,10 @@
 
 # DNSの仕組み
 
+- 名前解決
 - [DNSサーバとは](https://manual.iij.jp/dns/help/1480649.html)
-
 - ゾーン定義ファイル
+  - [名前解決の仕組みとゾーンファイルの設定：BINDで作るDNSサーバ（2） - ＠IT](https://www.atmarkit.co.jp/ait/articles/0101/12/news003.html)
 
 # ハンズオン
 
